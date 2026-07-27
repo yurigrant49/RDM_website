@@ -255,6 +255,7 @@
       border-radius: 12px;
       overflow: hidden;
       border: 1px solid #dce5f0;
+      position: relative;
     }
     .pdf-container object,
     .pdf-container embed {
@@ -330,6 +331,88 @@
       margin-right: 8px;
     }
 
+    /* Amazon Buy Button - Enhanced Styling */
+    .amazon-btn-container {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(135deg, #fef6e9 0%, #fef0d5 100%);
+      border-radius: 16px;
+      border: 2px solid #ffb347;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .amazon-btn-container .info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .amazon-btn-container .info i {
+      font-size: 1.8rem;
+      color: #ff9900;
+    }
+
+    .amazon-btn-container .info span {
+      font-size: 0.95rem;
+      color: #5a4a2a;
+      font-weight: 500;
+    }
+
+    .amazon-btn-container .info .highlight {
+      color: #c45500;
+      font-weight: 600;
+    }
+
+    .amazon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #ff9900;
+      color: #000000;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: 1px solid #e68a00;
+      box-shadow: 0 2px 8px rgba(255, 153, 0, 0.3);
+      white-space: nowrap;
+    }
+
+    .amazon-btn:hover {
+      background: #e68a00;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(255, 153, 0, 0.4);
+      color: #000000;
+      text-decoration: none;
+    }
+
+    .amazon-btn i {
+      font-size: 1.2rem;
+    }
+
+    .amazon-btn .fa-amazon {
+      color: #000;
+    }
+
     /* scroll */
     .publication-list::-webkit-scrollbar {
       width: 5px;
@@ -363,6 +446,17 @@
       }
       .reader-body {
         padding: 1.2rem;
+      }
+      .amazon-btn-container {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .amazon-btn-container .info {
+        justify-content: center;
+      }
+      .amazon-btn {
+        justify-content: center;
       }
     }
     @media (max-width: 480px) {
@@ -432,7 +526,8 @@
         format: "pdf",
         icon: "fa-book",
         file: "The Technology of Online Lead Generation SHORT.pdf",
-        description: "Complete guide to modern lead generation strategies, tools, and analytics."
+        description: "Complete guide to modern lead generation strategies, tools, and analytics.",
+        amazonLink: "https://a.co/d/0hvMK3m3"  // Amazon link for this book
       },
       {
         id: 2,
@@ -510,6 +605,24 @@
       document.body.removeChild(a);
     }
 
+    // Helper: create Amazon button
+    function createAmazonButton(amazonLink) {
+      const container = document.createElement('div');
+      container.className = 'amazon-btn-container';
+      container.innerHTML = `
+        <div class="info">
+          <i class="fab fa-amazon"></i>
+          <span>📚 Get your copy on <span class="highlight">Amazon</span></span>
+        </div>
+        <a href="${amazonLink}" target="_blank" rel="noopener noreferrer" class="amazon-btn">
+          <i class="fab fa-amazon"></i>
+          Buy on Amazon
+          <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i>
+        </a>
+      `;
+      return container;
+    }
+
     // ----- render list -----
     function renderList() {
       listEl.innerHTML = '';
@@ -532,6 +645,7 @@
         metaSpan.innerHTML = `
           <span><i class="far fa-file-${pub.format}"></i> ${pub.format.toUpperCase()}</span>
           <span class="badge">${pub.type}</span>
+          ${pub.amazonLink ? '<span class="badge" style="background:#ffb347; color:#000;"><i class="fab fa-amazon"></i> Amazon</span>' : ''}
         `;
 
         infoDiv.appendChild(titleSpan);
@@ -563,8 +677,17 @@
 
       readerBody.innerHTML = '';
 
+      // Check if this publication has an Amazon link
+      const hasAmazonLink = pub.amazonLink && pub.amazonLink.trim() !== '';
+
       // ----- PDF: embed with <object> -----
       if (pub.format === 'pdf') {
+        // Add Amazon button above PDF if available
+        if (hasAmazonLink) {
+          const amazonBtn = createAmazonButton(pub.amazonLink);
+          readerBody.appendChild(amazonBtn);
+        }
+
         const container = document.createElement('div');
         container.className = 'pdf-container';
 
@@ -610,7 +733,13 @@
         });
       } 
       else {
-        // ----- DOCX: preview with clear download button -----
+        // ----- DOCX: preview with download button -----
+        // Add Amazon button above DOCX if available
+        if (hasAmazonLink) {
+          const amazonBtn = createAmazonButton(pub.amazonLink);
+          readerBody.appendChild(amazonBtn);
+        }
+
         const previewDiv = document.createElement('div');
         previewDiv.className = 'file-preview';
         previewDiv.innerHTML = `
@@ -628,7 +757,6 @@
         `;
         readerBody.appendChild(previewDiv);
 
-        // DOCX download button
         const downloadBtn = document.getElementById('docxDownloadBtn');
         if (downloadBtn) {
           downloadBtn.addEventListener('click', function(e) {
@@ -637,10 +765,8 @@
           });
         }
 
-        // Click anywhere on the preview also triggers download (but not if clicking the button itself)
         previewDiv.style.cursor = 'pointer';
         previewDiv.addEventListener('click', function(e) {
-          // Don't trigger if the click is on the button (button has its own handler)
           if (e.target.tagName !== 'BUTTON' && !e.target.closest('.download-btn')) {
             downloadFile(pub.file);
           }
