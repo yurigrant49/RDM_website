@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A/B Test Statistical Analysis Tool — Leads Generation Edition</title>
+
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.min.js"></script>
+
+<style>
+  :root {
+    --ink: #1a2230;
+    --muted: #5b6472;
+    --rule: #dfe4ea;
+    --accent: #0d6e6e;
+    --accent-ink: #08504f;
+    --paper: #ffffff;
+    --panel: #f4f7f7;
+    --good-bg: #eef8f1;
+    --good-line: #2f9e5c;
+    --warn-bg: #fff8ec;
+    --warn-line: #c98a13;
+    --code-bg: #1e2530;
+    --code-ink: #e7ecf3;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 28px 100px;
+  }
+
+  header.doc-header {
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  h1.title {
+    font-size: 2em;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  p.subtitle {
+    font-size: 1.1em;
+    color: var(--accent-ink);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  nav.toc {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 20px 26px;
+    margin: 32px 0 48px;
+  }
+  nav.toc h2 {
+    margin: 0 0 12px;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border: none;
+    padding: 0;
+  }
+  nav.toc ol {
+    columns: 2;
+    -webkit-columns: 2;
+    margin: 0;
+    padding-left: 1.2em;
+    font-size: 0.95em;
+  }
+  nav.toc li { margin-bottom: 6px; break-inside: avoid; }
+  nav.toc a { color: var(--accent-ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  h2 {
+    font-size: 1.45em;
+    margin: 2.6em 0 0.9em;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--rule);
+    color: var(--accent-ink);
+    font-weight: 800;
+    scroll-margin-top: 20px;
+  }
+
+  h3 {
+    font-size: 1.15em;
+    margin: 1.8em 0 0.6em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  h4 {
+    font-size: 1em;
+    margin: 1.4em 0 0.4em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  p { margin: 0 0 1em; }
+
+  ul, ol {
+    margin: 0 0 1.1em;
+    padding-left: 1.5em;
+  }
+  li { margin: 0 0 0.4em; }
+  li ul { margin-top: 0.4em; margin-bottom: 0.6em; }
+
+  .example-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0.4em 0 0.9em;
+  }
+  .example-list li {
+    color: var(--muted);
+    font-style: italic;
+    font-size: 0.95em;
+    padding-left: 1.2em;
+    border-left: 2px solid var(--rule);
+    margin-bottom: 0.35em;
+  }
+
+  strong { font-weight: 700; }
+  code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    background: #eef1f4;
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  pre.code-block {
+    background: var(--code-bg);
+    color: var(--code-ink);
+    padding: 18px 22px;
+    border-radius: 8px;
+    font-size: 0.88em;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 1em 0 1.4em;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+  }
+  pre.code-block code { background: none; padding: 0; color: inherit; }
+  .code-label {
+    display: inline-block;
+    font-size: 0.72em;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .data-block {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 16px 22px;
+    margin: 1em 0 1.4em;
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    font-size: 0.9em;
+    white-space: pre-line;
+  }
+
+  .equation-block {
+    background: var(--panel);
+    border-left: 3px solid var(--accent);
+    padding: 16px 24px;
+    margin: 0.8em 0 1.4em;
+    overflow-x: auto;
+  }
+
+  .callout {
+    border-radius: 8px;
+    padding: 16px 22px;
+    margin: 1em 0 1.4em;
+    border: 1px solid;
+  }
+  .callout.good { background: var(--good-bg); border-color: var(--good-line); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font-weight: 800;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .callout.good .label { color: var(--good-line); }
+  .callout.warn .label { color: var(--warn-line); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8em 0 1.6em;
+    font-size: 0.93em;
+  }
+  caption {
+    text-align: left;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--ink);
+  }
+  th, td {
+    border: 1px solid var(--rule);
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+  }
+  tr:nth-child(even) td { background: var(--panel); }
+
+  ul.checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2em;
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 10px 20px;
+  }
+  ul.checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--rule);
+  }
+  ul.checklist li:last-child { border-bottom: none; }
+  ul.checklist .box {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
+    border: 2px solid var(--accent);
+    border-radius: 3px;
+  }
+
+  .closing-note {
+    margin-top: 2.2em;
+    padding: 18px 24px;
+    background: var(--panel);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+  }
+  .closing-note p { margin: 0; }
+
+  footer.doc-footer {
+    margin-top: 2.4em;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9em;
+    color: var(--muted);
+    font-style: italic;
+  }
+  footer.doc-footer p { margin: 0 0 0.3em; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    main { padding: 36px 18px 72px; }
+    h1.title { font-size: 1.5em; }
+    nav.toc ol { columns: 1; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <header class="doc-header">
+    <h1 class="title">A/B Test Statistical Analysis Tool</h1>
+    <p class="subtitle">Leads Generation Edition</p>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#overview">Overview</a></li>
+      <li><a href="#purpose">Purpose for Leads Generation</a></li>
+      <li><a href="#features">Key Features for Lead Gen Teams</a></li>
+      <li><a href="#when-to-use">When to Use This Tool</a></li>
+      <li><a href="#metrics">Suitable Lead Gen Metrics</a></li>
+      <li><a href="#how-to-use">How to Use — Step by Step</a></li>
+      <li><a href="#interpreting">Interpreting Results</a></li>
+      <li><a href="#tips">Lead Generation Specific Tips</a></li>
+      <li><a href="#examples">Real-World Lead Gen Examples</a></li>
+      <li><a href="#considerations">Specific Considerations</a></li>
+      <li><a href="#technical-setup">Technical Setup</a></li>
+      <li><a href="#support">Support</a></li>
+      <li><a href="#checklist">Quick Start Checklist</a></li>
+      <li><a href="#next-steps">Next Steps After Analysis</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="overview">📊 Overview</h2>
+  <p>The <code>ab_test_analysis.html</code> file is a <strong>self-contained, interactive web application</strong> specifically designed for analyzing A/B test results in <strong>leads generation business</strong>. This tool helps determine whether observed differences between control and test groups are statistically significant for key lead generation metrics.</p>
+
+  <h2 id="purpose">🎯 Purpose for Leads Generation</h2>
+  <p>This tool answers the critical question: <strong>&ldquo;Is the improvement in our lead generation metrics statistically significant, or could it be due to random variation in lead quality or volume?&rdquo;</strong></p>
+
+  <h2 id="features">🚀 Key Features for Lead Gen Teams</h2>
+
+  <h3>1. Lead-Specific Metrics Ready</h3>
+  <ul>
+    <li>Pre-configured for common lead generation metrics</li>
+    <li>Handles conversion rates, lead volumes, and quality scores</li>
+    <li>Optimized for lead gen sample sizes and variability</li>
+  </ul>
+
+  <h3>2. Comprehensive Visualizations</h3>
+  <ul>
+    <li><strong>Means Comparison Chart</strong>: Compare control vs test performance</li>
+    <li><strong>Confidence Interval Range</strong>: See precision of your results</li>
+    <li><strong>Difference Analysis</strong>: Visualize improvement magnitude</li>
+    <li><strong>Statistical Summary</strong>: All key numbers in one place</li>
+  </ul>
+
+  <h3>3. Lead Generation Focus</h3>
+  <ul>
+    <li>Statistical significance indicators tailored for business decisions</li>
+    <li>Clear interpretation for marketing and sales teams</li>
+    <li>Fast results for rapid campaign optimization</li>
+  </ul>
+
+  <h2 id="when-to-use">📈 When to Use This Tool in Lead Generation</h2>
+
+  <h3>✅ Ideal Use Cases</h3>
+
+  <h4>1. Landing Page Tests</h4>
+  <ul>
+    <li>Conversion rate differences</li>
+    <li>Form completion rates</li>
+    <li>Click-through rates</li>
+  </ul>
+
+  <h4>2. Lead Quality Experiments</h4>
+  <ul>
+    <li>Lead-to-opportunity conversion rates</li>
+    <li>Lead score averages</li>
+    <li>Qualification rates</li>
+  </ul>
+
+  <h4>3. Channel Performance</h4>
+  <ul>
+    <li>Cost per lead comparisons</li>
+    <li>Lead volume per channel</li>
+    <li>Quality metrics across sources</li>
+  </ul>
+
+  <h4>4. Campaign Optimization</h4>
+  <ul>
+    <li>Email campaign performance</li>
+    <li>Ad copy effectiveness</li>
+    <li>Offer conversion rates</li>
+  </ul>
+
+  <h2 id="metrics">📊 Suitable Lead Gen Metrics</h2>
+  <ul>
+    <li><strong>Conversion Rates</strong>: Form completions, click rates</li>
+    <li><strong>Lead Quality Scores</strong>: Average lead scores, qualification rates</li>
+    <li><strong>Volume Metrics</strong>: Leads per day, conversion percentages</li>
+    <li><strong>Cost Metrics</strong>: Cost per lead, ROI estimates</li>
+  </ul>
+
+  <h2 id="how-to-use">🛠 How to Use — Step by Step for Lead Generation</h2>
+
+  <h3>Step 1: Open the Tool</h3>
+  <ol>
+    <li>Download the <code>ab_test_analysis.html</code> file</li>
+    <li>Double-click to open in any modern web browser</li>
+    <li>No IT support needed — works immediately</li>
+  </ol>
+
+  <h3>Step 2: Input Your Lead Gen Test Data</h3>
+
+  <h4>Control Group (Current Performance):</h4>
+  <ul>
+    <li><strong>Mean</strong>: Your current metric value
+      <ul class="example-list">
+        <li>Example: 3.5% conversion rate &rarr; enter 3.5</li>
+        <li>Example: 75 average lead score &rarr; enter 75</li>
+      </ul>
+    </li>
+    <li><strong>Standard Deviation</strong>: Variability in your data
+      <ul class="example-list">
+        <li>For conversion rates: Use <code>sqrt(p*(1-p))</code> where p is conversion rate (decimal)</li>
+        <li>Example: 3.5% conversion &rarr; sqrt(0.035*(1-0.035)) = 0.184</li>
+        <li>For lead scores: Use actual standard deviation from your data</li>
+      </ul>
+    </li>
+    <li><strong>Sample Size</strong>: Number of leads/visitors
+      <ul class="example-list">
+        <li>Example: 5,000 visitors, 2,000 leads</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>Test Group (New Variant):</h4>
+  <ul>
+    <li><strong>Mean</strong>: Performance of your test variant</li>
+    <li><strong>Standard Deviation</strong>: Similar calculation as control</li>
+    <li><strong>Sample Size</strong>: Comparable group size</li>
+  </ul>
+
+  <h3>Step 3: Run Analysis</h3>
+  <ul>
+    <li>Click <strong>&ldquo;Run Analysis&rdquo;</strong> button</li>
+    <li>Results generate instantly</li>
+  </ul>
+
+  <h3>Step 4: Interpret Results for Lead Gen Decisions</h3>
+
+  <h4>🔍 Key Things to Look For:</h4>
+
+  <p><strong>1. Confidence Interval Range Display</strong></p>
+  <div class="data-block">CI Range Width: 0.85%
+Lower Bound: 3.25%
+Upper Bound: 4.10%
+Control Mean: 3.50%
+Test Mean: 3.67%</div>
+
+  <p><strong>2. Statistical Significance Indicator</strong></p>
+  <ul>
+    <li>✅ <strong>Green &ldquo;Statistically Significant&rdquo;</strong>: Confident the improvement is real</li>
+    <li>⚠️ <strong>Orange &ldquo;Not Statistically Significant&rdquo;</strong>: Improvement might be random</li>
+  </ul>
+
+  <p><strong>3. Business Impact Assessment</strong></p>
+  <ul>
+    <li>Consider the <strong>practical significance</strong> alongside statistical significance</li>
+    <li>Even if significant, is the improvement meaningful for business goals?</li>
+  </ul>
+
+  <h2 id="interpreting">📊 Interpreting Results for Lead Generation</h2>
+
+  <h3>Statistical Significance Decision Guide</h3>
+  <table>
+    <thead>
+      <tr><th>Scenario</th><th>Interpretation</th><th>Business Action</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>✅ <strong>Significant + Meaningful Improvement</strong></td><td>Strong evidence of real improvement</td><td><strong>Implement change</strong> and scale</td></tr>
+      <tr><td>✅ <strong>Significant + Small Improvement</strong></td><td>Real but minor effect</td><td>Consider cost vs benefit</td></tr>
+      <tr><td>⚠️ <strong>Not Significant + Promising Trend</strong></td><td>Inconclusive, needs more data</td><td><strong>Continue testing</strong> with larger sample</td></tr>
+      <tr><td>⚠️ <strong>Not Significant + No Improvement</strong></td><td>Likely no real effect</td><td><strong>Abandon test</strong> variant</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Confidence Interval Range Meaning for Lead Gen</h3>
+
+  <p><strong>Wide CI Range</strong> (e.g., &gt;2% for conversion rates):</p>
+  <ul>
+    <li>High uncertainty in results</li>
+    <li>Consider: Low sample size, high variability in lead quality</li>
+    <li><strong>Action</strong>: Run test longer or increase sample size</li>
+  </ul>
+
+  <p><strong>Narrow CI Range</strong> (e.g., &lt;0.5% for conversion rates):</p>
+  <ul>
+    <li>High precision, reliable results</li>
+    <li><strong>Action</strong>: Confident in decision making</li>
+  </ul>
+
+  <h2 id="tips">💡 Lead Generation Specific Tips</h2>
+
+  <h3>1. Sample Size Guidelines for Lead Gen</h3>
+  <ul>
+    <li><strong>Conversion Rate Tests</strong>: Minimum 2,000 visitors per variant</li>
+    <li><strong>Lead Quality Tests</strong>: Minimum 500 qualified leads per group</li>
+    <li><strong>Cost per Lead</strong>: Minimum 100 leads per variant for reliable estimates</li>
+  </ul>
+
+  <h3>2. Standard Deviation Calculations</h3>
+
+  <p><strong>For Conversion Rates:</strong></p>
+  <p>For a conversion rate \(p\), the standard deviation of the underlying Bernoulli outcome is:</p>
+  <div class="equation-block">
+    \[
+    \sigma \;=\; \sqrt{p\,(1-p)}
+    \]
+  </div>
+  <span class="code-label">JavaScript</span>
+  <pre class="code-block">// Example: 4% conversion rate
+p = 0.04
+std = Math.sqrt(p * (1-p))  // Result: 0.196
+// Enter 0.196 as standard deviation</pre>
+
+  <p><strong>For Lead Scores:</strong></p>
+  <ul>
+    <li>Use actual standard deviation from your CRM or analytics</li>
+    <li>Typical range: 15&ndash;30 for 100-point lead scoring systems</li>
+  </ul>
+
+  <p><strong>When Unknown:</strong></p>
+  <ul>
+    <li>Use conservative estimate: 0.2 for conversion rates</li>
+    <li>Use 20 for lead scores (if using 100-point scale)</li>
+  </ul>
+
+  <h3>3. Lead Quality Considerations</h3>
+  <ul>
+    <li>Account for lead quality variability in standard deviation</li>
+    <li>Higher quality variability &rarr; wider confidence intervals</li>
+    <li>Consider segmenting tests by lead source for cleaner results</li>
+  </ul>
+
+  <h2 id="examples">🎯 Real-World Lead Gen Examples</h2>
+
+  <h3>Example 1: Landing Page Conversion Test</h3>
+  <span class="code-label">Test data</span>
+  <div class="data-block">CONTROL (Old Design):
+Mean: 4.2% conversion, Std: 0.200, Size: 8,000 visitors
+
+TEST (New Design):
+Mean: 4.8% conversion, Std: 0.214, Size: 8,200 visitors</div>
+  <p><strong>Business Question</strong>: Should we switch to the new design?</p>
+
+  <h3>Example 2: Lead Scoring Algorithm Test</h3>
+  <span class="code-label">Test data</span>
+  <div class="data-block">CONTROL (Current Algorithm):
+Mean: 72 lead score, Std: 18, Size: 1,500 leads
+
+TEST (New Algorithm):
+Mean: 78 lead score, Std: 16, Size: 1,600 leads</div>
+  <p><strong>Business Question</strong>: Does new algorithm better predict lead quality?</p>
+
+  <h3>Example 3: Email Subject Line Test</h3>
+  <span class="code-label">Test data</span>
+  <div class="data-block">CONTROL (Current Subject):
+Mean: 22% open rate, Std: 0.414, Size: 50,000 emails
+
+TEST (New Subject):
+Mean: 25% open rate, Std: 0.433, Size: 50,000 emails</div>
+  <p><strong>Business Question</strong>: Which subject line performs better?</p>
+
+  <h2 id="considerations">⚠️ Lead Generation Specific Considerations</h2>
+
+  <h3>Common Pitfalls to Avoid</h3>
+  <ol>
+    <li><strong>Seasonality Effects</strong>: Ensure tests run during comparable time periods</li>
+    <li><strong>Lead Source Mix</strong>: Keep lead sources consistent between control and test</li>
+    <li><strong>Quality vs Quantity</strong>: Consider both conversion rates and lead quality</li>
+    <li><strong>Sales Cycle Impact</strong>: Some tests may affect downstream metrics (lead-to-opportunity)</li>
+  </ol>
+
+  <div class="callout warn">
+    <span class="label">When Results Might Be Misleading</span>
+    <ul>
+      <li><strong>Small Sample Sizes</strong>: &lt;100 conversions per group</li>
+      <li><strong>High Variability</strong>: Very different lead sources mixed together</li>
+      <li><strong>External Factors</strong>: Major market events during test period</li>
+      <li><strong>Seasonal Businesses</strong>: Testing across different seasons</li>
+    </ul>
+  </div>
+
+  <h2 id="technical-setup">🔧 Technical Setup for Lead Gen Teams</h2>
+
+  <h3>Data Preparation</h3>
+  <ol>
+    <li><strong>Extract test results</strong> from your analytics platform</li>
+    <li><strong>Calculate means</strong> for your key metrics</li>
+    <li><strong>Compute standard deviation</strong> using formulas above</li>
+    <li><strong>Record sample sizes</strong> for each group</li>
+  </ol>
+
+  <h3>Integration with Your Stack</h3>
+  <ul>
+    <li>This tool works independently of your CRM/Marketing automation</li>
+    <li>Use it for quick validation before full platform analysis</li>
+    <li>Perfect for rapid testing and team discussions</li>
+  </ul>
+
+  <h2 id="support">📞 Lead Generation Support</h2>
+
+  <h3>Who to Contact For</h3>
+
+  <p><strong>Statistical Questions:</strong></p>
+  <ul>
+    <li>Data Science team for complex scenarios</li>
+    <li>Analytics lead for interpretation guidance</li>
+  </ul>
+
+  <p><strong>Test Design:</strong></p>
+  <ul>
+    <li>Marketing Operations for test setup</li>
+    <li>Campaign managers for business context</li>
+  </ul>
+
+  <p><strong>Tool Issues:</strong></p>
+  <ul>
+    <li>Reference this documentation first</li>
+    <li>Contact analytics team for technical support</li>
+  </ul>
+
+  <h2 id="checklist">🎯 Quick Start Checklist for Lead Gen Teams</h2>
+  <ul class="checklist">
+    <li><span class="box"></span> Download ab_test_analysis.html</li>
+    <li><span class="box"></span> Gather test results from analytics platform</li>
+    <li><span class="box"></span> Calculate conversion rates and standard deviations</li>
+    <li><span class="box"></span> Input control group metrics</li>
+    <li><span class="box"></span> Input test group metrics</li>
+    <li><span class="box"></span> Click &ldquo;Run Analysis&rdquo;</li>
+    <li><span class="box"></span> Check significance indicator (Green/Orange)</li>
+    <li><span class="box"></span> Review confidence interval range width</li>
+    <li><span class="box"></span> Consider business impact of the difference</li>
+    <li><span class="box"></span> Make data-driven rollout decision!</li>
+  </ul>
+
+  <h2 id="next-steps">🚀 Next Steps After Analysis</h2>
+
+  <div class="callout good">
+    <span class="label">If Significant Improvement</span>
+    <ol>
+      <li>Document the test results</li>
+      <li>Plan rollout strategy</li>
+      <li>Monitor performance post-implementation</li>
+      <li>Share learnings with team</li>
+    </ol>
+  </div>
+
+  <div class="callout warn">
+    <span class="label">If Not Significant</span>
+    <ol>
+      <li>Decide if more data would help</li>
+      <li>Consider running test longer</li>
+      <li>Document learnings for future tests</li>
+      <li>Move to next optimization opportunity</li>
+    </ol>
+  </div>
+
+  <div class="closing-note">
+    <p><strong>Remember</strong>: Statistical significance tells you if an effect is real, but <strong>business significance</strong> tells you if it matters. Always consider the practical impact on your lead generation goals!</p>
+  </div>
+
+  <footer class="doc-footer">
+    <p>Last Updated: [Current Date]</p>
+    <p>Maintained by: Marketing Analytics Team</p>
+    <p>Designed for: Leads Generation Business Unit</p>
+  </footer>
+
+</main>
+</body>
+</html>

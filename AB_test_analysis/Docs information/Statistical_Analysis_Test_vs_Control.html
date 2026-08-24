@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Statistical Analysis: Test vs Control — Employee Guide</title>
+
+<style>
+  :root {
+    --ink: #1a2230;
+    --muted: #5b6472;
+    --rule: #dfe4ea;
+    --accent: #0d6e6e;
+    --accent-ink: #08504f;
+    --paper: #ffffff;
+    --panel: #f4f7f7;
+    --good-bg: #eef8f1;
+    --good-line: #2f9e5c;
+    --warn-bg: #fff8ec;
+    --warn-line: #c98a13;
+    --bad-bg: #fdeeee;
+    --bad-line: #c0392b;
+    --blue: #2563a8;
+    --gray: #7a828d;
+    --code-bg: #1e2530;
+    --code-ink: #e7ecf3;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    line-height: 1.65;
+    font-size: 17px;
+  }
+
+  main {
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 56px 28px 100px;
+  }
+
+  header.doc-header {
+    margin-bottom: 40px;
+    padding-bottom: 28px;
+    border-bottom: 3px solid var(--accent);
+  }
+
+  h1.title {
+    font-size: 2em;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    font-weight: 800;
+    color: var(--ink);
+  }
+
+  p.subtitle {
+    font-size: 1.1em;
+    color: var(--accent-ink);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  nav.toc {
+    background: var(--panel);
+    border: 1px solid var(--rule);
+    border-radius: 10px;
+    padding: 20px 26px;
+    margin: 32px 0 48px;
+  }
+  nav.toc h2 {
+    margin: 0 0 12px;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    border: none;
+    padding: 0;
+  }
+  nav.toc ol {
+    columns: 2;
+    -webkit-columns: 2;
+    margin: 0;
+    padding-left: 1.2em;
+    font-size: 0.95em;
+  }
+  nav.toc li { margin-bottom: 6px; break-inside: avoid; }
+  nav.toc a { color: var(--accent-ink); text-decoration: none; }
+  nav.toc a:hover { text-decoration: underline; }
+
+  h2 {
+    font-size: 1.45em;
+    margin: 2.6em 0 0.9em;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--rule);
+    color: var(--accent-ink);
+    font-weight: 800;
+    scroll-margin-top: 20px;
+  }
+
+  h3 {
+    font-size: 1.15em;
+    margin: 1.8em 0 0.6em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  h4 {
+    font-size: 1em;
+    margin: 1.4em 0 0.4em;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  p { margin: 0 0 1em; }
+
+  ul, ol {
+    margin: 0 0 1.1em;
+    padding-left: 1.5em;
+  }
+  li { margin: 0 0 0.4em; }
+  li ul, li ol { margin-top: 0.4em; margin-bottom: 0.6em; }
+
+  strong { font-weight: 700; }
+  code {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    background: #eef1f4;
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    font-size: 0.9em;
+  }
+
+  .callout {
+    border-radius: 8px;
+    padding: 16px 22px;
+    margin: 1em 0 1.4em;
+    border: 1px solid;
+  }
+  .callout.good { background: var(--good-bg); border-color: var(--good-line); }
+  .callout.warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .callout.bad { background: var(--bad-bg); border-color: var(--bad-line); }
+  .callout p:last-child { margin-bottom: 0; }
+  .callout .label {
+    font-weight: 800;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .callout.good .label { color: var(--good-line); }
+  .callout.warn .label { color: var(--warn-line); }
+  .callout.bad .label { color: var(--bad-line); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.8em 0 1.6em;
+    font-size: 0.93em;
+  }
+  th, td {
+    border: 1px solid var(--rule);
+    padding: 10px 14px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    background: var(--accent);
+    color: #fff;
+    font-weight: 700;
+  }
+  tr:nth-child(even) td { background: var(--panel); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.9em;
+  }
+  .badge-red { background: var(--bad-bg); color: var(--bad-line); }
+  .badge-green { background: var(--good-bg); color: var(--good-line); }
+  .badge-yellow { background: var(--warn-bg); color: var(--warn-line); }
+  .badge-gray { background: #eef0f2; color: var(--gray); }
+
+  /* colored indicator dots — corrected to match each item's actual named color */
+  ul.indicator-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.2em;
+  }
+  ul.indicator-list li {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 6px 0;
+  }
+  .dot {
+    flex: 0 0 auto;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-top: 4px;
+    border: 1px solid rgba(0,0,0,0.12);
+  }
+  .dot-blue { background: var(--blue); }
+  .dot-red { background: var(--bad-line); }
+  .dot-green { background: var(--good-line); }
+  .dot-gray { background: var(--gray); }
+  .dot-yellow { background: #e0ab1c; }
+
+  .decision-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.4em;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .decision-list li {
+    padding: 12px 18px;
+    border-radius: 6px;
+    border-left: 4px solid;
+    background: var(--panel);
+  }
+  .decision-list li.act { border-color: var(--good-line); }
+  .decision-list li.consider { border-color: var(--warn-line); }
+  .decision-list li.no-act { border-color: var(--bad-line); }
+
+  .closing-note {
+    margin-top: 2.2em;
+    padding: 18px 24px;
+    background: var(--panel);
+    border-left: 3px solid var(--accent);
+    border-radius: 4px;
+  }
+  .closing-note p { margin: 0; }
+
+  footer.doc-footer {
+    margin-top: 2.4em;
+    padding-top: 1.4em;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9em;
+    color: var(--muted);
+    font-style: italic;
+  }
+  footer.doc-footer p { margin: 0 0 0.3em; }
+
+  @media (max-width: 600px) {
+    body { font-size: 16px; }
+    main { padding: 36px 18px 72px; }
+    h1.title { font-size: 1.5em; }
+    nav.toc ol { columns: 1; }
+  }
+</style>
+</head>
+<body>
+<main>
+
+  <header class="doc-header">
+    <h1 class="title">Statistical Analysis: Test vs Control</h1>
+    <p class="subtitle">Employee Guide</p>
+  </header>
+
+  <nav class="toc" aria-label="Table of contents">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#overview">Project Overview</a></li>
+      <li><a href="#purpose">Purpose</a></li>
+      <li><a href="#quick-start">Quick Start Guide</a></li>
+      <li><a href="#results">Understanding the Results</a></li>
+      <li><a href="#color-coding">Color Coding &amp; Visual Indicators</a></li>
+      <li><a href="#best-practices">Best Practices for Analysts</a></li>
+      <li><a href="#troubleshooting">Troubleshooting Common Issues</a></li>
+      <li><a href="#business-examples">Business Application Examples</a></li>
+      <li><a href="#manual-input">Alternative: Manual Input</a></li>
+      <li><a href="#takeaways">Key Takeaways for Decision Makers</a></li>
+      <li><a href="#support">Support &amp; Next Steps</a></li>
+    </ol>
+  </nav>
+
+  <h2 id="overview">📋 Project Overview</h2>
+  <p><strong>Statistical Analysis: Test vs Control</strong> is an interactive web application designed for comparing experimental (Test) groups against baseline (Control) groups using rigorous statistical methods. This tool enables data-driven decision making by providing comprehensive statistical analysis with intuitive visualizations.</p>
+
+  <h2 id="purpose">🎯 Purpose</h2>
+  <ul>
+    <li>Compare performance metrics between Test and Control groups</li>
+    <li>Determine statistical significance of observed differences</li>
+    <li>Calculate effect sizes to understand practical impact</li>
+    <li>Support data-driven decision making for business experiments</li>
+  </ul>
+
+  <h2 id="quick-start">🚀 Quick Start Guide</h2>
+
+  <h3>Step 1: Access the Application</h3>
+  <ol>
+    <li>Open the application in your web browser</li>
+    <li>You&rsquo;ll see two file upload sections: <strong>Control Group</strong> and <strong>Test Group</strong></li>
+  </ol>
+
+  <h3>Step 2: Prepare Your Data Files</h3>
+
+  <h4>Control Group CSV Requirements:</h4>
+  <ul>
+    <li>Must contain a column named <strong>&ldquo;control&rdquo;</strong></li>
+    <li>File should contain baseline/current state data</li>
+  </ul>
+
+  <h4>Test Group CSV Requirements:</h4>
+  <ul>
+    <li>Must contain a column named <strong>&ldquo;test&rdquo;</strong></li>
+    <li>File should contain experimental/new feature data</li>
+  </ul>
+
+  <h3>Step 3: Upload Your Files</h3>
+
+  <h4>Option A: Drag &amp; Drop (Recommended)</h4>
+  <ol>
+    <li><strong>Drag</strong> your Control CSV file to the left upload area (blue border)</li>
+    <li><strong>Drag</strong> your Test CSV file to the right upload area (blue border)</li>
+    <li>Wait for green confirmation messages</li>
+  </ol>
+
+  <h4>Option B: Click to Browse</h4>
+  <ol>
+    <li><strong>Click</strong> &ldquo;Drag &amp; drop Control CSV file here&rdquo; and select your Control file</li>
+    <li><strong>Click</strong> &ldquo;Drag &amp; drop Test CSV file here&rdquo; and select your Test file</li>
+    <li>Wait for file processing to complete</li>
+  </ol>
+
+  <h3>Step 4: Analyze the Data</h3>
+  <ol>
+    <li><strong>Click</strong> the &ldquo;Analyze Data&rdquo; button (becomes enabled after both files upload successfully)</li>
+    <li>The system will automatically process and display results</li>
+  </ol>
+
+  <h2 id="results">📊 Understanding the Results</h2>
+
+  <h3>1. Data Preview Section</h3>
+  <ul>
+    <li><strong>First 10 records</strong> from each dataset</li>
+    <li>Quick verification that data loaded correctly</li>
+    <li>Sample values and formatting check</li>
+  </ul>
+
+  <h3>2. Sample Information</h3>
+
+  <h4>Control Group (Baseline):</h4>
+  <ul>
+    <li>Sample size (n)</li>
+    <li>Mean (average value)</li>
+    <li>Standard deviation (variability)</li>
+    <li>Variance</li>
+  </ul>
+
+  <h4>Test Group (Experiment):</h4>
+  <ul>
+    <li>Same metrics as Control group</li>
+    <li>Enables quick comparison of basic statistics</li>
+  </ul>
+
+  <h3>3. Histogram Visualizations</h3>
+  <ul>
+    <li><strong>Distribution patterns</strong> for both groups</li>
+    <li><strong>Frequency analysis</strong> &mdash; how values are distributed</li>
+    <li><strong>Visual comparison</strong> of data spreads</li>
+    <li><strong>Outlier detection</strong> through distribution shape</li>
+  </ul>
+
+  <h3>4. Statistical Test Results</h3>
+
+  <h4>Z-Test Results:</h4>
+  <ul>
+    <li><strong>Z-Score</strong>: Measures how many standard deviations the Test mean is from Control mean</li>
+    <li><strong>Critical Value</strong>: &plusmn;1.96 (for 95% confidence level)</li>
+    <li><strong>P-value</strong>: Probability that observed difference occurred by chance</li>
+    <li><strong>Conclusion</strong>: Clear &ldquo;Reject&rdquo; or &ldquo;Do Not Reject&rdquo; Null Hypothesis</li>
+  </ul>
+
+  <h4>Interpretation Guide:</h4>
+  <table>
+    <thead>
+      <tr><th>Z-Score</th><th>P-value</th><th>Conclusion</th><th>Business Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>&gt; 1.96 or &lt; &minus;1.96</td><td>&lt; 0.05</td><td><span class="badge badge-red">Reject Null</span></td><td>Statistically significant difference</td></tr>
+      <tr><td>&minus;1.96 to 1.96</td><td>&ge; 0.05</td><td><span class="badge badge-green">Do Not Reject</span></td><td>No significant difference found</td></tr>
+    </tbody>
+  </table>
+
+  <h3>5. Effect Size Analysis (Cohen&rsquo;s d)</h3>
+
+  <h4>Effect Size Interpretation:</h4>
+  <table>
+    <thead>
+      <tr><th>Cohen&rsquo;s d</th><th>Effect Size</th><th>Practical Meaning</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>0.0 &ndash; 0.2</td><td><span class="badge badge-gray">Very Small</span></td><td>Negligible difference</td></tr>
+      <tr><td>0.2 &ndash; 0.5</td><td><span class="badge badge-green">Small</span></td><td>Noticeable but small effect</td></tr>
+      <tr><td>0.5 &ndash; 0.8</td><td><span class="badge badge-yellow">Medium</span></td><td>Moderate practical effect</td></tr>
+      <tr><td>&gt; 0.8</td><td><span class="badge badge-red">Large</span></td><td>Substantial practical effect</td></tr>
+    </tbody>
+  </table>
+
+  <h3>6. Statistical Power</h3>
+  <ul>
+    <li><strong>Power (1&minus;&beta;)</strong>: Probability of detecting a real effect</li>
+    <li><strong>Type II Error (&beta;)</strong>: Probability of missing a real effect</li>
+    <li><strong>Confidence Level</strong>: 95% (industry standard)</li>
+    <li><strong>Type I Error (&alpha;)</strong>: 5% (false positive rate)</li>
+  </ul>
+
+  <h2 id="color-coding">🎨 Color Coding &amp; Visual Indicators</h2>
+
+  <h3>Result Cards</h3>
+  <ul class="indicator-list">
+    <li><span class="dot dot-blue"></span> <span><strong>Blue Border</strong>: Normal/neutral state</span></li>
+    <li><span class="dot dot-red"></span> <span><strong>Red Background</strong>: Statistically significant result</span></li>
+    <li><span class="dot dot-green"></span> <span><strong>Green Background</strong>: Not statistically significant</span></li>
+  </ul>
+
+  <h3>Conclusion Text</h3>
+  <ul class="indicator-list">
+    <li><span class="dot dot-red"></span> <span><strong>Red &ldquo;Reject&rdquo;</strong>: Strong evidence of difference</span></li>
+    <li><span class="dot dot-green"></span> <span><strong>Green &ldquo;Do Not Reject&rdquo;</strong>: Insufficient evidence of difference</span></li>
+  </ul>
+
+  <h3>Effect Size Bar</h3>
+  <ul class="indicator-list">
+    <li><span class="dot dot-gray"></span> <span><strong>Gray</strong>: Very Small (0.0&ndash;0.2)</span></li>
+    <li><span class="dot dot-green"></span> <span><strong>Green</strong>: Small (0.2&ndash;0.5)</span></li>
+    <li><span class="dot dot-yellow"></span> <span><strong>Yellow</strong>: Medium (0.5&ndash;0.8)</span></li>
+    <li><span class="dot dot-red"></span> <span><strong>Red</strong>: Large (&gt; 0.8)</span></li>
+  </ul>
+
+  <h2 id="best-practices">💡 Best Practices for Analysts</h2>
+
+  <h3>Data Preparation</h3>
+  <ol>
+    <li><strong>Ensure data quality</strong> before uploading</li>
+    <li><strong>Remove outliers</strong> if they don&rsquo;t represent typical behavior</li>
+    <li><strong>Check for missing values</strong> &mdash; the system filters them automatically</li>
+    <li><strong>Verify column names</strong> exactly match requirements</li>
+  </ol>
+
+  <h3>Interpretation</h3>
+  <ol>
+    <li><strong>Consider both statistical AND practical significance</strong></li>
+    <li><strong>Large sample sizes</strong> can find tiny but unimportant differences</li>
+    <li><strong>Small effect sizes</strong> may still be business-critical</li>
+    <li><strong>Always check histograms</strong> for data distribution patterns</li>
+  </ol>
+
+  <h3>Reporting</h3>
+  <ol>
+    <li><strong>Include sample sizes</strong> in all reports</li>
+    <li><strong>Report both p-values and effect sizes</strong></li>
+    <li><strong>Note confidence intervals</strong> for context</li>
+    <li><strong>Consider power analysis</strong> for experiment design</li>
+  </ol>
+
+  <h2 id="troubleshooting">🛠️ Troubleshooting Common Issues</h2>
+
+  <h3>File Upload Problems</h3>
+  <ul>
+    <li><strong>&ldquo;CSV must contain &lsquo;control&rsquo; column&rdquo;</strong>: Check your column name spelling</li>
+    <li><strong>&ldquo;No valid numeric data found&rdquo;</strong>: Ensure values are numbers, not text</li>
+    <li><strong>File not loading</strong>: Verify it&rsquo;s a proper CSV format</li>
+  </ul>
+
+  <h3>Analysis Issues</h3>
+  <ul>
+    <li><strong>Unexpected results</strong>: Check histograms for data distribution</li>
+    <li><strong>Extreme p-values</strong>: Verify data ranges and outliers</li>
+    <li><strong>Low power</strong>: Consider increasing sample size for future tests</li>
+  </ul>
+
+  <h3>Technical Issues</h3>
+  <ul>
+    <li><strong>Charts not displaying</strong>: Refresh the page and re-upload files</li>
+    <li><strong>Slow performance</strong>: Large files (&gt;10,000 rows) may take longer to process</li>
+  </ul>
+
+  <h2 id="business-examples">📈 Business Application Examples</h2>
+
+  <h3>A/B Testing</h3>
+  <ul>
+    <li><strong>Website conversion rates</strong></li>
+    <li><strong>Email and/or SMS campaigns performance</strong></li>
+    <li><strong>Feature adoption metrics</strong></li>
+    <li><strong>User engagement levels</strong></li>
+  </ul>
+
+  <h3>Product Analysis</h3>
+  <ul>
+    <li><strong>New feature impact</strong></li>
+    <li><strong>Pricing (EPL, EPSL) strategy testing</strong></li>
+    <li><strong>User experience improvements</strong></li>
+    <li><strong>Performance optimization</strong></li>
+  </ul>
+
+  <h3>Operational Metrics</h3>
+  <ul>
+    <li><strong>Process efficiency changes</strong></li>
+    <li><strong>Quality improvement initiatives</strong></li>
+    <li><strong>Publishers and/or Lenders satisfaction scores</strong></li>
+    <li><strong>Employee performance metrics</strong></li>
+  </ul>
+
+  <h2 id="manual-input">🔄 Alternative: Manual Input</h2>
+  <p>For quick calculations or theoretical scenarios:</p>
+  <ol>
+    <li><strong>Use the Manual Input section</strong> at the bottom</li>
+    <li><strong>Enter known statistics</strong> for Control and Test groups</li>
+    <li><strong>Click &ldquo;Update Manual Analysis&rdquo;</strong> for instant results</li>
+    <li><strong>Compare with uploaded data</strong> or use for planning</li>
+  </ol>
+
+  <h2 id="takeaways">🎯 Key Takeaways for Decision Makers</h2>
+
+  <h3>When to ACT on Results</h3>
+  <ul class="decision-list">
+    <li class="act">✅ <strong>Statistically Significant + Large Effect Size</strong> = Strong case for implementation</li>
+    <li class="act">✅ <strong>Statistically Significant + Medium Effect Size</strong> = Worth considering with other factors</li>
+    <li class="consider">⚠️ <strong>Statistically Significant + Small Effect Size</strong> = Evaluate cost/benefit carefully</li>
+    <li class="no-act">❌ <strong>Not Statistically Significant</strong> = Insufficient evidence to proceed</li>
+  </ul>
+
+  <h3>Questions to Ask</h3>
+  <ol>
+    <li>Is the difference statistically reliable? (p-value)</li>
+    <li>How large is the practical impact? (effect size)</li>
+    <li>Do we have enough data to be confident? (power)</li>
+    <li>What do the distributions tell us? (histograms)</li>
+  </ol>
+
+  <h2 id="support">📞 Support &amp; Next Steps</h2>
+
+  <h3>For Technical Issues</h3>
+  <ul>
+    <li>Contact IT support for application problems</li>
+    <li>Verify file formats and data quality</li>
+  </ul>
+
+  <h3>For Statistical Questions</h3>
+  <ul>
+    <li>Consult with senior data analysts</li>
+    <li>Reference statistical guidelines in company knowledge base</li>
+  </ul>
+
+  <h3>For Business Interpretation</h3>
+  <ul>
+    <li>Schedule review with stakeholders</li>
+    <li>Consider additional contextual factors</li>
+    <li>Plan follow-up experiments if needed</li>
+  </ul>
+
+  <div class="closing-note">
+    <p><strong>Remember</strong>: This tool provides statistical evidence, but business decisions should consider both statistical results and practical business context.</p>
+  </div>
+
+  <footer class="doc-footer">
+    <p>Last Updated: 2025/10/01</p>
+    <p>Version: 1.0</p>
+    <p>Robust Data Modeling LLC</p>
+    <p>Yuri Grant</p>
+  </footer>
+
+</main>
+</body>
+</html>
