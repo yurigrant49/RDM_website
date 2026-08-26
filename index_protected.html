@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Robust Data Modeling | Advanced Data Theory Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a5f7a;
+            --secondary: #57c5b6;
+            --dark: #002b36;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: var(--dark);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon {
+            color: var(--secondary);
+            font-size: 2.2rem;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-main {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+        }
+        
+        .logo-tagline {
+            font-size: 0.75rem;
+            color: var(--secondary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        
+        .logo-accent {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--secondary);
+        }
+        
+        nav a.active {
+            color: var(--secondary);
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 0.9rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            background-color: #4ab3a7;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Documents Menu */
+        .documents-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .document-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .document-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .document-icon {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        
+        .document-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .document-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+        
+        .document-content p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .document-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .document-link:hover {
+            color: var(--secondary);
+            gap: 12px;
+        }
+        
+        /* Lock icon for protected documents */
+        .document-link .lock-icon {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-left: 4px;
+        }
+        
+        /* Company Info */
+        .company-info {
+            background-color: var(--light);
+            padding: 4rem 0;
+            margin-top: 3rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .info-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+        
+        .info-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            border: none;
+        }
+        
+        .modal-close:hover {
+            color: var(--dark);
+            transform: rotate(90deg);
+        }
+        
+        .modal-icon {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .modal h3 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal p {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .modal .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .modal label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 95, 122, 0.1);
+        }
+        
+        .modal .submit-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal .submit-btn:hover {
+            background: #0d4254;
+            transform: translateY(-2px);
+        }
+        
+        .modal .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.8rem;
+            display: none;
+        }
+        
+        .modal .error-message.show {
+            display: block;
+        }
+        
+        .modal .demo-credentials {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f5f7fa;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--gray);
+            text-align: center;
+        }
+        
+        .modal .demo-credentials strong {
+            color: var(--dark);
+        }
+        
+        /* Protected badge on document cards */
+        .protected-badge {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .free-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h2 {
+                font-size: 2.3rem;
+            }
+            
+            nav ul {
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--dark);
+                padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            nav li {
+                width: 100%;
+            }
+            
+            nav a {
+                display: block;
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            nav a.active::after {
+                display: none;
+            }
+            
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .documents-menu {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo-text {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-container {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .logo-icon {
+                font-size: 1.8rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .modal {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Logo SVG Styles */
+        .logo-svg {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .logo-svg-path {
+            fill: var(--secondary);
+        }
+        
+        .logo-svg-circle {
+            fill: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <div class="logo-container">
+                    <!-- SVG Logo -->
+                    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background Circle -->
+                        <circle cx="50" cy="50" r="45" fill="#002b36" />
+                        
+                        <!-- Data Cube Base -->
+                        <polygon points="35,35 65,35 75,50 65,65 35,65 25,50" fill="#1a5f7a" />
+                        
+                        <!-- 3D Effect -->
+                        <polygon points="35,35 65,35 75,50 65,65 35,65" fill="#0d4254" opacity="0.7" />
+                        
+                        <!-- Data Points -->
+                        <circle cx="40" cy="45" r="4" fill="#57c5b6" />
+                        <circle cx="50" cy="50" r="4" fill="#57c5b6" />
+                        <circle cx="60" cy="55" r="4" fill="#57c5b6" />
+                        
+                        <!-- Connecting Lines -->
+                        <line x1="40" y1="45" x2="50" y2="50" stroke="#57c5b6" stroke-width="2" />
+                        <line x1="50" y1="50" x2="60" y2="55" stroke="#57c5b6" stroke-width="2" />
+                        
+                        <!-- Abstract Waves -->
+                        <path d="M30,70 Q40,65 50,70 T70,65" stroke="#57c5b6" stroke-width="3" fill="none" />
+                        <path d="M25,75 Q35,70 45,75 T65,70" stroke="#57c5b6" stroke-width="2" fill="none" opacity="0.7" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-main">
+                        Robust <span class="logo-accent">Data</span> Modeling
+                    </div>
+                    <div class="logo-tagline">
+                        Advanced Data Theory Solutions
+                    </div>
+                </div>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#documents">Theoretical Documents</a></li>
+                    <li><a href="Tennis_theory/Stringing_math.html">Innovations & Inventions</a></li>
+                    <li><a href="#about">About</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <h2>Advanced Data Modeling Theoretical Frameworks</h2>
+            <p>Pioneering research and development in robust data modeling techniques, statistical frameworks, and algorithmic innovations for complex data systems.</p>
+            <a href="#documents" class="cta-button">Explore Our Research</a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div class="section-title" id="documents">
+                <h2>Theoretical Developments</h2>
+                <p>Access our foundational research papers, theoretical frameworks, and methodological innovations that drive modern data modeling practices.</p>
+            </div>
+            
+            <!-- Documents Menu -->
+            <div class="documents-menu">
+                <!-- Document 1 - FREE -->
+                <div class="document-card" data-doc="1">
+                    <div class="document-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="document-content">
+                        <h3>A/B Test Model <span class="free-badge">FREE</span></h3>
+                        <p>Theoretical framework for self-adjusting predictive models that evolve with streaming data while maintaining consistency guarantees.</p>
+                        <a href="AB_test_analysis/ABindex.html" class="document-link" data-doc="1" data-protected="false">
+                            <span>View Document</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Document 2 - FREE -->
+                <div class="document-card" data-doc="2">
+                    <div class="document-icon">
+                        <i class="fas fa-project-diagram"></i>
+                    </div>
+                    <div class="document-content">
+                        <h3>Sales Optimization System <span class="free-badge">FREE</span></h3>
+                        <p>This real-time widget computes the optimal lender price that maximizes expected profit per lead.</p>
+                        <a href="Sales/Sale_optimum.html" class="document-link" data-doc="2" data-protected="false">
+                            <span>View Document</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Document 3 - FREE -->
+                <div class="document-card" data-doc="3">
+                    <div class="document-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="document-content">
+                        <h3>Lead Sales Performance Analyzer <span class="free-badge">FREE</span></h3>
+                        <p>A comprehensive framework for statistical modeling that ensures Analyzer EPL (Earnings Per Lead) and EPSL (Earnings Per Successful Lead) with confidence intervals and margin of error trends.</p>
+                        <a href="Performance/Lead_performance.html" class="document-link" data-doc="3" data-protected="false">
+                            <span>View Document</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Document 4 - PROTECTED -->
+                <div class="document-card" data-doc="4">
+                    <div class="document-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="document-content">
+                        <h3>Privacy-Preserving Analytics <span class="protected-badge">PROTECTED</span></h3>
+                        <p>Mathematical foundations for data analysis techniques that guarantee differential privacy without sacrificing analytical precision.</p>
+                        <a href="AB_test_analysis/Docs information/Statistical Significance Explained for Leads Generation.docx" 
+                           class="document-link" data-doc="4" data-protected="true">
+                            <span>View Document</span>
+                            <i class="fas fa-lock lock-icon"></i>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <!-- Document 5 - PROTECTED -->
+                <div class="document-card" data-doc="5">
+                    <div class="document-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <div class="document-content">
+                        <h3>Real-time Anomaly Detection <span class="protected-badge">PROTECTED</span></h3>
+                        <p>Algorithmic foundations for detecting and classifying anomalies in high-velocity data streams with minimal computational overhead.</p>
+                        <a href="#" class="document-link" data-doc="5" data-protected="true">
+                            <span>View Document</span>
+                            <i class="fas fa-lock lock-icon"></i>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            
+                <!-- Document 6 - PROTECTED -->
+                <div class="document-card" data-doc="6">
+                    <div class="document-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <div class="document-content">
+                        <h3>AI in Leads Generation Business <span class="protected-badge">PROTECTED</span></h3>   	     
+                        <p>AI theoretical models for understanding the most affected variables by string tension in tennis physics.</p>
+                        <a href="#documents" class="document-link" data-doc="6" data-protected="true">
+                            <span>View Document</span>
+                            <i class="fas fa-lock lock-icon"></i>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Company Info -->
+            <div class="company-info" id="about">
+                <div class="section-title">
+                    <h2>Our Theoretical Approach</h2>
+                    <p>Robust Data Modeling specializes in developing foundational theories that transform how organizations understand and leverage their data assets.</p>
+                </div>
+                
+                <div class="info-grid">
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Innovative Research</h3>
+                        <p>We push the boundaries of data science with original theoretical work published in leading academic journals.</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Collaborative Development</h3>
+                        <p>Our frameworks are developed in collaboration with industry partners and academic institutions worldwide.</p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <div class="info-icon">
+                            <i class="fas fa-rocket"></i>
+                        </div>
+                        <h3>Practical Implementation</h3>
+                        <p>Every theoretical advancement is designed with practical application and real-world implementation in mind.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Robust Data Modeling</h3>
+                    <p>Advancing the theoretical foundations of data science through innovative research and collaborative development.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Theoretical Documents</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Statistical Foundations</a></li>
+                        <li><a href="#">Data Structures</a></li>
+                        <li><a href="#">Learning Models</a></li>
+                        <li><a href="#">Privacy Analytics</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-map-marker-alt"></i> 123 Research Drive, Tech City</li>
+                        <li><i class="fas fa-phone"></i> (555) 123-4567</li>
+                        <li><i class="fas fa-envelope"></i> info@robustdatamodeling.com</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Robust Data Modeling. All rights reserved. | Theoretical Research Division</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Authorization Modal -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" id="modalClose">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            
+            <h3>Authorization Required</h3>
+            <p>This document is protected. Please sign in to access it.</p>
+            
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="authEmail">Email Address</label>
+                    <input type="email" id="authEmail" placeholder="Enter your email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="authPassword">Password</label>
+                    <input type="password" id="authPassword" placeholder="Enter your password" required>
+                </div>
+                
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+                
+                <div class="error-message" id="authError">
+                    Invalid email or password. Please try again.
+                </div>
+                
+                <div class="demo-credentials">
+                    <strong>Demo Credentials:</strong><br>
+                    Email: <strong>demo@robustdatamodeling.com</strong><br>
+                    Password: <strong>demopass123</strong>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu functionality
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mainNav = document.getElementById('mainNav');
+        
+        mobileMenuBtn.addEventListener('click', function() {
+            mainNav.classList.toggle('active');
+            const icon = mobileMenuBtn.querySelector('i');
+            if (mainNav.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+        
+        // Close mobile menu when clicking on a link
+        const navLinks = document.querySelectorAll('nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                if (mainNav.classList.contains('active')) {
+                    mainNav.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        });
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // === AUTHORIZATION SYSTEM ===
+        let pendingDocLink = null;
+        let isAuthenticated = false;
+
+        // DOM elements
+        const authModal = document.getElementById('authModal');
+        const modalClose = document.getElementById('modalClose');
+        const authForm = document.getElementById('authForm');
+        const authError = document.getElementById('authError');
+        const authEmail = document.getElementById('authEmail');
+        const authPassword = document.getElementById('authPassword');
+
+        // Show modal function
+        function showAuthModal() {
+            authModal.classList.add('active');
+            authError.classList.remove('show');
+            authEmail.value = '';
+            authPassword.value = '';
+            authEmail.focus();
+        }
+
+        // Hide modal function
+        function hideAuthModal() {
+            authModal.classList.remove('active');
+            authError.classList.remove('show');
+        }
+
+        // Close modal events
+        modalClose.addEventListener('click', hideAuthModal);
+        authModal.addEventListener('click', function(e) {
+            if (e.target === authModal) {
+                hideAuthModal();
+                pendingDocLink = null;
+            }
+        });
+
+        // Escape key to close modal
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && authModal.classList.contains('active')) {
+                hideAuthModal();
+                pendingDocLink = null;
+            }
+        });
+
+        // Handle form submission
+        authForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = authEmail.value.trim();
+            const password = authPassword.value.trim();
+
+            // Demo credentials check
+            if (email === 'demo@robustdatamodeling.com' && password === 'demopass123') {
+                isAuthenticated = true;
+                hideAuthModal();
+                authError.classList.remove('show');
+                
+                // If there's a pending document link, navigate to it
+                if (pendingDocLink) {
+                    const link = pendingDocLink;
+                    pendingDocLink = null;
+                    
+                    // Check if it's an internal anchor link
+                    if (link.getAttribute('href').startsWith('#')) {
+                        const targetId = link.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                        window.open(link.getAttribute('href'), '_blank');
+                    }
+                }
+            } else {
+                authError.classList.add('show');
+                authPassword.value = '';
+                authPassword.focus();
+            }
+        });
+
+        // Handle document link clicks
+        document.querySelectorAll('.document-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Check if this document is protected
+                const isProtected = this.getAttribute('data-protected') === 'true';
+                
+                if (isProtected) {
+                    if (isAuthenticated) {
+                        // If already authenticated, proceed
+                        const href = this.getAttribute('href');
+                        if (href.startsWith('#')) {
+                            const targetId = href;
+                            const targetElement = document.querySelector(targetId);
+                            if (targetElement) {
+                                window.scrollTo({
+                                    top: targetElement.offsetTop - 80,
+                                    behavior: 'smooth'
+                                });
+                            }
+                        } else {
+                            window.open(href, '_blank');
+                        }
+                    } else {
+                        // Store the link for after authentication
+                        pendingDocLink = this;
+                        showAuthModal();
+                    }
+                } else {
+                    // Documents 1, 2, 3 are free - no authentication required
+                    const href = this.getAttribute('href');
+                    if (href.startsWith('#')) {
+                        const targetId = href;
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    } else {
+                        window.open(href, '_blank');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
