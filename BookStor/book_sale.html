@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robust Data Modeling · Publications</title>
+  <!-- Font Awesome Icons (free) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+  <!-- Payhip JavaScript -->
+  <script type="text/javascript" src="https://payhip.com/payhip.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f5f7fb;
+      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
+      padding: 2rem 1.5rem;
+      color: #1e293b;
+    }
+
+    .container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* header */
+    .page-header {
+      margin-bottom: 2.5rem;
+      border-bottom: 2px solid #d0d9e8;
+      padding-bottom: 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .page-header h1 {
+      font-weight: 600;
+      font-size: 2.4rem;
+      letter-spacing: -0.5px;
+      color: #0a1e3c;
+    }
+    .page-header h1 i {
+      color: #2a5c8a;
+      margin-right: 10px;
+    }
+    .page-header .sub {
+      font-size: 1rem;
+      color: #475569;
+      background: #e9edf4;
+      padding: 0.4rem 1.2rem;
+      border-radius: 40px;
+      font-weight: 450;
+    }
+
+    /* main grid: list + reader */
+    .publication-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    /* -------- LEFT: list panel -------- */
+    .list-panel {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.03), 0 2px 6px rgba(0,20,40,0.06);
+      padding: 1.5rem 0.5rem 1.5rem 1.5rem;
+      border: 1px solid #e9edf4;
+      max-height: 75vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .list-panel h2 {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #1e3a5f;
+      letter-spacing: 0.3px;
+      padding-right: 1rem;
+      margin-bottom: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .list-panel h2 i {
+      color: #2a5c8a;
+      font-size: 1.1rem;
+    }
+
+    .publication-list {
+      list-style: none;
+      overflow-y: auto;
+      padding-right: 0.75rem;
+      flex: 1;
+    }
+
+    .publication-list li {
+      padding: 0.9rem 1rem 0.9rem 1.2rem;
+      margin-bottom: 6px;
+      border-radius: 16px;
+      background: #f8faff;
+      border: 1px solid transparent;
+      transition: all 0.15s ease;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+    }
+    .publication-list li:hover {
+      background: #eef4fc;
+      border-color: #cbd8ec;
+      transform: translateX(4px);
+    }
+    .publication-list li.active {
+      background: #e0eaf7;
+      border-color: #7a9bcb;
+      box-shadow: 0 2px 8px rgba(42, 92, 138, 0.08);
+    }
+
+    .pub-icon {
+      font-size: 1.6rem;
+      width: 2.4rem;
+      text-align: center;
+      color: #2a5c8a;
+      flex-shrink: 0;
+    }
+    .pub-info {
+      flex: 1;
+      min-width: 0;
+    }
+    .pub-title {
+      font-weight: 500;
+      font-size: 1rem;
+      color: #0b2a4a;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .pub-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 0.75rem;
+      color: #5e6f8d;
+      margin-top: 2px;
+      flex-wrap: wrap;
+    }
+    .pub-meta .badge {
+      background: #dce3ef;
+      padding: 0.1rem 0.6rem;
+      border-radius: 30px;
+      font-weight: 500;
+      font-size: 0.65rem;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      color: #1f3b5c;
+    }
+    .pub-meta i {
+      margin-right: 3px;
+      font-size: 0.7rem;
+    }
+
+    /* -------- RIGHT: reader panel -------- */
+    .reader-panel {
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.04), 0 2px 6px rgba(0,20,40,0.05);
+      border: 1px solid #e9edf4;
+      padding: 1.8rem 2rem 2rem 2rem;
+      min-height: 60vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .reader-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex: 1;
+      color: #7a8aa8;
+      text-align: center;
+      padding: 2rem 0.5rem;
+    }
+    .reader-placeholder i {
+      font-size: 4rem;
+      color: #c4d0e4;
+      margin-bottom: 1.2rem;
+    }
+    .reader-placeholder h3 {
+      font-weight: 400;
+      font-size: 1.2rem;
+      color: #2d4a6e;
+    }
+    .reader-placeholder p {
+      max-width: 320px;
+      margin-top: 0.5rem;
+      color: #6f7e9b;
+    }
+
+    /* active reader content */
+    .reader-content {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      flex: 1;
+    }
+
+    .reader-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      border-bottom: 1px solid #e2e9f3;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+    .reader-header .title {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #0a1e3c;
+      letter-spacing: -0.3px;
+    }
+    .reader-header .format-badge {
+      background: #eef2f8;
+      padding: 0.25rem 1rem;
+      border-radius: 40px;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #1f3e62;
+    }
+
+    .reader-body {
+      flex: 1;
+      background: #fafcff;
+      border-radius: 20px;
+      padding: 1.8rem 2rem;
+      border: 1px solid #eef3fc;
+      overflow-y: auto;
+      min-height: 300px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* PDF object container */
+    .pdf-container {
+      width: 100%;
+      flex: 1;
+      min-height: 500px;
+      background: #eef3fc;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #dce5f0;
+      position: relative;
+    }
+    .pdf-container object,
+    .pdf-container embed {
+      width: 100%;
+      height: 100%;
+      min-height: 500px;
+      display: block;
+      background: white;
+    }
+
+    .file-preview {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      gap: 1rem;
+      padding: 1.5rem 0;
+    }
+    .file-preview i {
+      font-size: 4.5rem;
+      color: #2a5c8a;
+      opacity: 0.7;
+    }
+    .file-preview .doc-info {
+      background: #eef3fc;
+      padding: 0.5rem 1.8rem;
+      border-radius: 80px;
+      font-size: 0.9rem;
+      color: #1d3a5a;
+      font-weight: 450;
+    }
+    .file-preview .action-hint {
+      color: #4e6b8f;
+      font-size: 0.9rem;
+      border: 1px dashed #b8cbdf;
+      padding: 0.5rem 1.8rem;
+      border-radius: 60px;
+      background: #f6faff;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .file-preview .action-hint:hover {
+      background: #e5effa;
+      border-color: #7a9bcb;
+    }
+    .file-preview .action-hint i {
+      font-size: 1rem;
+      margin-right: 8px;
+      color: #3d6a9e;
+    }
+
+    .download-btn {
+      display: inline-block;
+      background: #2a5c8a;
+      color: white;
+      padding: 0.7rem 2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: 0.15s;
+      margin-top: 0.5rem;
+    }
+    .download-btn:hover {
+      background: #1d4470;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(42, 92, 138, 0.3);
+    }
+    .download-btn i {
+      margin-right: 8px;
+    }
+
+    /* Amazon Buy Button - Enhanced Styling */
+    .amazon-btn-container {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(135deg, #fef6e9 0%, #fef0d5 100%);
+      border-radius: 16px;
+      border: 2px solid #ffb347;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .amazon-btn-container .info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .amazon-btn-container .info i {
+      font-size: 1.8rem;
+      color: #ff9900;
+    }
+
+    .amazon-btn-container .info span {
+      font-size: 0.95rem;
+      color: #5a4a2a;
+      font-weight: 500;
+    }
+
+    .amazon-btn-container .info .highlight {
+      color: #c45500;
+      font-weight: 600;
+    }
+
+    .amazon-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #ff9900;
+      color: #000000;
+      padding: 0.6rem 1.8rem;
+      border-radius: 40px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+      border: 1px solid #e68a00;
+      box-shadow: 0 2px 8px rgba(255, 153, 0, 0.3);
+      white-space: nowrap;
+    }
+
+    .amazon-btn:hover {
+      background: #e68a00;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(255, 153, 0, 0.4);
+      color: #000000;
+      text-decoration: none;
+    }
+
+    .amazon-btn i {
+      font-size: 1.2rem;
+    }
+
+    .amazon-btn .fa-amazon {
+      color: #000;
+    }
+
+    /* Payhip Button Container */
+    .payhip-container {
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      border-radius: 16px;
+      border: 2px solid #4caf50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+      animation: slideDown 0.3s ease-out;
+    }
+
+    .payhip-container .info {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .payhip-container .info i {
+      font-size: 1.8rem;
+      color: #2e7d32;
+    }
+
+    .payhip-container .info span {
+      font-size: 0.95rem;
+      color: #1e3a2a;
+      font-weight: 500;
+    }
+
+    .payhip-container .info .highlight {
+      color: #1b5e20;
+      font-weight: 600;
+    }
+
+    /* Override Payhip button default styles */
+    .payhip-buy-button {
+      font-weight: 700 !important;
+      font-size: 1rem !important;
+      padding: 0.6rem 1.8rem !important;
+      border-radius: 40px !important;
+      text-decoration: none !important;
+      transition: all 0.2s ease !important;
+      box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3) !important;
+      white-space: nowrap !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 10px !important;
+      border: 1px solid #388e3c !important;
+      background: #4caf50 !important;
+      color: #ffffff !important;
+    }
+
+    .payhip-buy-button:hover {
+      transform: translateY(-2px) !important;
+      box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4) !important;
+      background: #388e3c !important;
+      color: #ffffff !important;
+      text-decoration: none !important;
+    }
+
+    /* scroll */
+    .publication-list::-webkit-scrollbar {
+      width: 5px;
+    }
+    .publication-list::-webkit-scrollbar-track {
+      background: #eef3fc;
+      border-radius: 20px;
+    }
+    .publication-list::-webkit-scrollbar-thumb {
+      background: #b8cbdf;
+      border-radius: 20px;
+    }
+    .publication-list::-webkit-scrollbar-thumb:hover {
+      background: #8aa5c2;
+    }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      .publication-grid {
+        grid-template-columns: 1fr;
+        gap: 1.8rem;
+      }
+      .list-panel {
+        max-height: 400px;
+        padding: 1rem 0.5rem 1rem 1rem;
+      }
+      .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      .reader-body {
+        padding: 1.2rem;
+      }
+      .amazon-btn-container,
+      .payhip-container {
+        flex-direction: column;
+        align-items: stretch;
+        text-align: center;
+      }
+      .amazon-btn-container .info,
+      .payhip-container .info {
+        justify-content: center;
+      }
+      .amazon-btn,
+      .payhip-buy-button {
+        justify-content: center;
+      }
+    }
+    @media (max-width: 480px) {
+      body { padding: 1rem; }
+      .reader-panel { padding: 1.2rem; }
+      .pdf-container { min-height: 350px; }
+      .pdf-container object,
+      .pdf-container embed { min-height: 350px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <!-- header -->
+  <div class="page-header">
+    <h1><i class="fas fa-database"></i> Robust Data Modeling</h1>
+    <span class="sub"><i class="far fa-book-open"></i> books & articles</span>
+  </div>
+
+  <!-- main grid -->
+  <div class="publication-grid">
+
+    <!-- left: list -->
+    <div class="list-panel">
+      <h2><i class="fas fa-list-ul"></i> Publications</h2>
+      <ul class="publication-list" id="pubList">
+        <!-- items injected by JS -->
+      </ul>
+      <div style="margin-top: 0.8rem; font-size: 0.7rem; color: #7f8fa8; padding-left: 0.5rem; border-top: 1px solid #e3eaf3; padding-top: 0.8rem;">
+        <i class="fas fa-file-alt"></i> click any title to preview
+      </div>
+    </div>
+
+    <!-- right: reader -->
+    <div class="reader-panel" id="readerPanel">
+      <!-- placeholder -->
+      <div id="readerPlaceholder" class="reader-placeholder">
+        <i class="fas fa-file-pdf"></i>
+        <h3>Select a book or article</h3>
+        <p>Choose a publication from the list to view its contents. <br>Supports .docx and .pdf formats.</p>
+      </div>
+
+      <!-- active reader -->
+      <div id="readerContent" class="reader-content" style="display: none;">
+        <div class="reader-header">
+          <span class="title" id="readerTitle">Title</span>
+          <span class="format-badge" id="readerFormat">PDF</span>
+        </div>
+        <div class="reader-body" id="readerBody">
+          <!-- dynamic content -->
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  (function() {
+    // ----- PUBLICATIONS DATA -----
+    const publications = [
+      {
+        id: 1,
+        title: "The Technology of Online Lead Generation",
+        type: "book",
+        format: "pdf",
+        icon: "fa-book",
+        file: "The Technology of Online Lead Generation SHORT.pdf",
+        description: "Complete guide to modern lead generation strategies, tools, and analytics.",
+        payhipLink: "https://payhip.com/b/vHXKd",
+        amazonLink: "https://a.co/d/0hvMK3m3"
+      },
+      {
+        id: 2,
+        title: "MATHEMATICAL THEORY OF FRAUD DETECTION",
+        type: "book",
+        format: "pdf",
+        icon: "fa-book",
+        file: "MATHEMATICAL THEORY OF FRAUD DETECTION_short.pdf",
+        description: "Probabilistic Models, Dynamic Inference, and Artificial Intelligence.",
+        payhipLink: "https://payhip.com/b/7Mil0",
+        amazonLink: "https://a.co/d/0hX7xjMf"  // Amazon link for this book
+      },
+      {
+        id: 3,
+        title: "ARTIFICIAL INTELLIGENCE FOR FRAUD DETECTION",
+        type: "book",
+        format: "pdf",
+        icon: "fa-book",
+        file: "ARTIFICIAL INTELLIGENCE FOR FRAUD DETECTION_short_cover.pdf",
+        description: "Agentic Systems, Machine Learning, and Autonomous Risk Decisioning.",
+        payhipLink: "https://payhip.com/b/1QAe4",
+        amazonLink: "https://a.co/d/02nZjpXF"  // Amazon link for this book
+      },
+      {
+        id: 4,
+        title: "MATH THEORY OF FRAUD DETECTION",
+        type: "book",
+        format: "docx",
+        icon: "fa-book",
+        file: "advanced_dimensional_modeling.docx",
+        description: "Short context of complete version of MATHEMATICAL THEORY.",
+	payhipLink: "https://payhip.com/b/q8WGg"
+      },
+      {
+        id: 5,
+        title: "Data Vault 2.0 in Practice",
+        type: "article",
+        format: "pdf",
+        icon: "fa-file-alt",
+        file: "data_vault_2_practice.pdf",
+        description: "Real-world implementation of Data Vault architecture."
+      },
+      {
+        id: 6,
+        title: "Handling Slowly Changing Dimensions",
+        type: "article",
+        format: "docx",
+        icon: "fa-file-lines",
+        file: "handling_scd.docx",
+        description: "SCD types, hybrid approaches, and performance considerations."
+      },
+      {
+        id: 7,
+        title: "Modeling for Big Data & NoSQL",
+        type: "article",
+        format: "pdf",
+        icon: "fa-file-pdf",
+        file: "nosql_data_modeling.pdf",
+        description: "Polyglot persistence, document modeling, and graph patterns."
+      }
+    ];
+
+    // DOM elements
+    const listEl = document.getElementById('pubList');
+    const placeholder = document.getElementById('readerPlaceholder');
+    const readerContent = document.getElementById('readerContent');
+    const readerTitle = document.getElementById('readerTitle');
+    const readerFormat = document.getElementById('readerFormat');
+    const readerBody = document.getElementById('readerBody');
+
+    let activeId = null;
+
+    // Helper: trigger download
+    function downloadFile(filename) {
+      const a = document.createElement('a');
+      a.href = filename;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // Helper: create Amazon button
+    function createAmazonButton(amazonLink) {
+      const container = document.createElement('div');
+      container.className = 'amazon-btn-container';
+      container.innerHTML = `
+        <div class="info">
+          <i class="fab fa-amazon"></i>
+          <span>📚 Get your copy on <span class="highlight">Amazon</span></span>
+        </div>
+        <a href="${amazonLink}" target="_blank" rel="noopener noreferrer" class="amazon-btn">
+          <i class="fab fa-amazon"></i>
+          Buy on Amazon
+          <i class="fas fa-external-link-alt" style="font-size:0.8rem;"></i>
+        </a>
+      `;
+      return container;
+    }
+
+    // Helper: create Payhip button
+    function createPayhipButton(payhipLink, title) {
+      const container = document.createElement('div');
+      container.className = 'payhip-container';
+      container.innerHTML = `
+        <div class="info">
+          <i class="fas fa-shopping-cart"></i>
+          <span>📖 <span class="highlight">${title}</span></span>
+        </div>
+        <a href="${payhipLink}" class="payhip-buy-button" data-theme="green" data-product="${payhipLink.split('/').pop()}">
+          <i class="fas fa-lock"></i>
+          Buy Now
+        </a>
+      `;
+      return container;
+    }
+
+    // ----- render list -----
+    function renderList() {
+      listEl.innerHTML = '';
+      publications.forEach(pub => {
+        const li = document.createElement('li');
+        li.dataset.id = pub.id;
+        li.className = (activeId === pub.id) ? 'active' : '';
+
+        const iconSpan = document.createElement('span');
+        iconSpan.className = 'pub-icon';
+        iconSpan.innerHTML = `<i class="fas ${pub.icon}"></i>`;
+
+        const infoDiv = document.createElement('div');
+        infoDiv.className = 'pub-info';
+        const titleSpan = document.createElement('div');
+        titleSpan.className = 'pub-title';
+        titleSpan.textContent = pub.title;
+        const metaSpan = document.createElement('div');
+        metaSpan.className = 'pub-meta';
+        let badges = `
+          <span><i class="far fa-file-${pub.format}"></i> ${pub.format.toUpperCase()}</span>
+          <span class="badge">${pub.type}</span>
+        `;
+        if (pub.amazonLink) {
+          badges += `<span class="badge" style="background:#ffb347; color:#000;"><i class="fab fa-amazon"></i></span>`;
+        }
+        if (pub.payhipLink) {
+          badges += `<span class="badge" style="background:#4caf50; color:#fff;"><i class="fas fa-shopping-cart"></i></span>`;
+        }
+        metaSpan.innerHTML = badges;
+
+        infoDiv.appendChild(titleSpan);
+        infoDiv.appendChild(metaSpan);
+        li.appendChild(iconSpan);
+        li.appendChild(infoDiv);
+
+        li.addEventListener('click', () => {
+          selectPublication(pub.id);
+        });
+
+        listEl.appendChild(li);
+      });
+    }
+
+    // ----- display publication -----
+    function selectPublication(id) {
+      const pub = publications.find(p => p.id === id);
+      if (!pub) return;
+
+      activeId = id;
+      renderList();
+
+      placeholder.style.display = 'none';
+      readerContent.style.display = 'flex';
+
+      readerTitle.textContent = pub.title;
+      readerFormat.textContent = pub.format.toUpperCase();
+
+      readerBody.innerHTML = '';
+
+      // Check for Payhip link
+      const hasPayhipLink = pub.payhipLink && pub.payhipLink.trim() !== '';
+      // Check for Amazon link
+      const hasAmazonLink = pub.amazonLink && pub.amazonLink.trim() !== '';
+
+      // ----- PDF: embed with <object> -----
+      if (pub.format === 'pdf') {
+        // Add Payhip button if available
+        if (hasPayhipLink) {
+          const payhipBtn = createPayhipButton(pub.payhipLink, pub.title);
+          readerBody.appendChild(payhipBtn);
+        }
+
+        // Add Amazon button if available
+        if (hasAmazonLink) {
+          const amazonBtn = createAmazonButton(pub.amazonLink);
+          readerBody.appendChild(amazonBtn);
+        }
+
+        const container = document.createElement('div');
+        container.className = 'pdf-container';
+
+        const objectEl = document.createElement('object');
+        objectEl.data = pub.file;
+        objectEl.type = 'application/pdf';
+        objectEl.style.width = '100%';
+        objectEl.style.height = '100%';
+        objectEl.style.minHeight = '500px';
+
+        // fallback content inside object
+        const fallback = document.createElement('div');
+        fallback.className = 'file-preview';
+        fallback.innerHTML = `
+          <i class="fas fa-file-pdf" style="color:#c44536;"></i>
+          <div class="doc-info"><i class="fas fa-folder-open"></i> ${pub.file}</div>
+          <div style="max-width:400px; text-align:center; color:#2c4b6e; background:#f2f7ff; padding:0.8rem 1.8rem; border-radius:40px; font-size:0.9rem; border:1px solid #d5e2f5;">
+            <i class="fas fa-info-circle"></i> Your browser may not display PDFs inline.
+          </div>
+          <button class="download-btn" id="pdfDownloadBtn">
+            <i class="fas fa-download"></i> Download PDF
+          </button>
+        `;
+        objectEl.appendChild(fallback);
+        container.appendChild(objectEl);
+        readerBody.appendChild(container);
+
+        // PDF download button
+        const downloadBtn = document.getElementById('pdfDownloadBtn');
+        if (downloadBtn) {
+          downloadBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            downloadFile(pub.file);
+          });
+        }
+
+        // Click on container background also triggers download
+        container.style.cursor = 'pointer';
+        container.addEventListener('click', function(e) {
+          if (e.target === container || e.target === objectEl) {
+            downloadFile(pub.file);
+          }
+        });
+      } 
+      else {
+        // ----- DOCX: preview with download button -----
+        // Add Payhip button if available
+        if (hasPayhipLink) {
+          const payhipBtn = createPayhipButton(pub.payhipLink, pub.title);
+          readerBody.appendChild(payhipBtn);
+        }
+
+        // Add Amazon button if available
+        if (hasAmazonLink) {
+          const amazonBtn = createAmazonButton(pub.amazonLink);
+          readerBody.appendChild(amazonBtn);
+        }
+
+        const previewDiv = document.createElement('div');
+        previewDiv.className = 'file-preview';
+        previewDiv.innerHTML = `
+          <i class="fas fa-file-word" style="color:#2a6b9e;"></i>
+          <div class="doc-info"><i class="fas fa-folder-open"></i> ${pub.file}</div>
+          <div style="max-width:450px; text-align:center; color:#2c4b6e; background:#f2f7ff; padding:0.8rem 1.8rem; border-radius:40px; font-size:0.9rem; border:1px solid #d5e2f5;">
+            <i class="fas fa-file-signature"></i> ${pub.description}
+          </div>
+          <button class="download-btn" id="docxDownloadBtn">
+            <i class="fas fa-download"></i> Download DOCX
+          </button>
+          <div style="margin-top:8px; font-size:0.75rem; color:#62748d;">
+            <i class="far fa-eye"></i> DOCX preview not available inline — click the button to download
+          </div>
+        `;
+        readerBody.appendChild(previewDiv);
+
+        const downloadBtn = document.getElementById('docxDownloadBtn');
+        if (downloadBtn) {
+          downloadBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            downloadFile(pub.file);
+          });
+        }
+
+        previewDiv.style.cursor = 'pointer';
+        previewDiv.addEventListener('click', function(e) {
+          if (e.target.tagName !== 'BUTTON' && !e.target.closest('.download-btn')) {
+            downloadFile(pub.file);
+          }
+        });
+      }
+    }
+
+    // ----- init: select the first publication -----
+    function initDefault() {
+      if (publications.length > 0) {
+        selectPublication(publications[0].id);
+      } else {
+        placeholder.style.display = 'flex';
+        readerContent.style.display = 'none';
+      }
+    }
+
+    renderList();
+    initDefault();
+
+    window.__pubData = publications;
+  })();
+</script>
+
+<!-- Files must be in the same folder:
+  - The Technology of Online Lead Generation.pdf
+  - Optimization Ping Tree Algorithm.docx
+-->
+</body>
+</html>
