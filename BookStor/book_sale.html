@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-45FS5ESK69"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-45FS5ESK69');
-</script>
-
-  <meta charset="UTF-8">	
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Robust Data Modeling · Publications</title>
   <!-- Font Awesome Icons (free) -->
@@ -546,16 +537,715 @@
       .pdf-container embed { min-height: 350px; }
     }
   </style>
+
+    <style>
+        :root {
+            --primary: #1a5f7a;
+            --secondary: #57c5b6;
+            --dark: #002b36;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1300px;
+            margin: 0 auto;
+            
+        }
+        
+        /* Header & Navigation */
+        header {
+            background-color: var(--dark);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+	padding-right: 20px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        
+        .logo-container {
+            position: relative;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-icon {
+            color: var(--secondary);
+            font-size: 2.2rem;
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-main {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            line-height: 1.1;
+        }
+        
+        .logo-tagline {
+            font-size: 0.75rem;
+            color: var(--secondary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        
+        .logo-accent {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+        
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: var(--transition);
+            padding: 0.5rem 0;
+            position: relative;
+        }
+        
+        nav a:hover {
+            color: var(--secondary);
+        }
+        
+        nav a.active {
+            color: var(--secondary);
+        }
+        
+        nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--secondary);
+        }
+        
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            color: white;
+            padding: 5rem 0;
+            text-align: center;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h2 {
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: var(--secondary);
+            color: var(--dark);
+            padding: 0.9rem 2rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+        }
+        
+        .cta-button:hover {
+            background-color: #4ab3a7;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.2rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .section-title p {
+            color: var(--gray);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        /* Documents Menu */
+        .documents-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .document-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .document-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .document-icon {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        
+        .document-content {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .document-content h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.8rem;
+            color: var(--dark);
+        }
+        
+        .document-content p {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            flex-grow: 1;
+        }
+        
+        .document-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .document-link:hover {
+            color: var(--secondary);
+            gap: 12px;
+        }
+        
+        /* Lock icon for protected documents */
+        .document-link .lock-icon {
+            font-size: 0.8rem;
+            color: var(--gray);
+            margin-left: 4px;
+        }
+        
+        /* Company Info */
+        .company-info {
+            background-color: var(--light);
+            padding: 4rem 0;
+            margin-top: 3rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .info-card {
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+        
+        .info-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 3rem 0 1.5rem;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        
+        .footer-links a:hover {
+            color: var(--secondary);
+            padding-left: 5px;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            animation: slideDown 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--gray);
+            cursor: pointer;
+            transition: var(--transition);
+            background: none;
+            border: none;
+        }
+        
+        .modal-close:hover {
+            color: var(--dark);
+            transform: rotate(90deg);
+        }
+        
+        .modal-icon {
+            text-align: center;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .modal h3 {
+            text-align: center;
+            font-size: 1.5rem;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal p {
+            text-align: center;
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .modal .form-group {
+            margin-bottom: 1.2rem;
+        }
+        
+        .modal label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.4rem;
+            color: var(--dark);
+            font-size: 0.9rem;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+        
+        .modal input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 95, 122, 0.1);
+        }
+        
+        .modal .submit-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .modal .submit-btn:hover {
+            background: #0d4254;
+            transform: translateY(-2px);
+        }
+        
+        .modal .error-message {
+            color: #dc3545;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 0.8rem;
+            display: none;
+        }
+        
+        .modal .error-message.show {
+            display: block;
+        }
+        
+        .modal .demo-credentials {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f5f7fa;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--gray);
+            text-align: center;
+        }
+        
+        .modal .demo-credentials strong {
+            color: var(--dark);
+        }
+        
+        /* Protected badge on document cards */
+        .protected-badge {
+            display: inline-block;
+            background: #dc3545;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .free-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            font-size: 0.65rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 8px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h2 {
+                font-size: 2.3rem;
+            }
+            
+            nav ul {
+                gap: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            nav {
+                position: fixed;
+                top: 70px;
+                left: 0;
+                width: 100%;
+                background-color: var(--dark);
+                padding: 1rem;
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: var(--transition);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+            
+            nav ul {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            nav li {
+                width: 100%;
+            }
+            
+            nav a {
+                display: block;
+                padding: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            nav a.active::after {
+                display: none;
+            }
+            
+            .hero {
+                padding: 3rem 0;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .documents-menu {
+                grid-template-columns: 1fr;
+            }
+            
+            .logo-text {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo-container {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .logo-icon {
+                font-size: 1.8rem;
+            }
+            
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+            
+            .modal {
+                padding: 1.5rem;
+            }
+        }
+        
+        /* Logo SVG Styles */
+        .logo-svg {
+            width: 50px;
+            height: 50px;
+        }
+        
+        .logo-svg-path {
+            fill: var(--secondary);
+        }
+        
+        .logo-svg-circle {
+            fill: var(--primary);
+        }
+    </style>
+
+
 </head>
 <body>
 <div class="container">
 
-  <!-- header -->
-  <div class="page-header">
-	  
-    <h1><i class="fas fa-database"></i> Robust Data Modeling</h1>
-    <span class="sub"><i class="far fa-book-open"></i> books & articles</span>
-  </div>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <div class="logo-container">
+                    <!-- SVG Logo -->
+                    <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Background Circle -->
+                        <circle cx="50" cy="50" r="45" fill="#002b36" />
+                        
+                        <!-- Data Cube Base -->
+                        <polygon points="35,35 65,35 75,50 65,65 35,65 25,50" fill="#1a5f7a" />
+                        
+                        <!-- 3D Effect -->
+                        <polygon points="35,35 65,35 75,50 65,65 35,65" fill="#0d4254" opacity="0.7" />
+                        
+                        <!-- Data Points -->
+                        <circle cx="40" cy="45" r="4" fill="#57c5b6" />
+                        <circle cx="50" cy="50" r="4" fill="#57c5b6" />
+                        <circle cx="60" cy="55" r="4" fill="#57c5b6" />
+                        
+                        <!-- Connecting Lines -->
+                        <line x1="40" y1="45" x2="50" y2="50" stroke="#57c5b6" stroke-width="2" />
+                        <line x1="50" y1="50" x2="60" y2="55" stroke="#57c5b6" stroke-width="2" />
+                        
+                        <!-- Abstract Waves -->
+                        <path d="M30,70 Q40,65 50,70 T70,65" stroke="#57c5b6" stroke-width="3" fill="none" />
+                        <path d="M25,75 Q35,70 45,75 T65,70" stroke="#57c5b6" stroke-width="2" fill="none" opacity="0.7" />
+                    </svg>
+                </div>
+                <div class="logo-text">
+                    <div class="logo-main">
+                        Robust <span class="logo-accent">Data</span> Modeling
+                    </div>
+                    <div class="logo-tagline">
+                        Advanced Data Theory Solutions
+                    </div>
+                </div>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav id="mainNav">
+                <ul>
+                    <li><a href="../index.html" >Home</a></li>
+                    <li><a href="Frameworks/rfamework.html">Frameworks </a></li>
+                    <li><a href="Tennis_theory/Stringing_math.html">Innovations & Inventions</a></li>
+                    <li><a href="book_sale_1.html" class="active">Publications</a></li>
+                    <li><a href="../about.html">About us</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
 
   <!-- main grid -->
   <div class="publication-grid">
@@ -640,35 +1330,8 @@
         icon: "fa-book",
         file: "MATHEMATICAL THEORY OF FRAUD DETECTION_short.pdf",
         description: "Short context of complete version of MATHEMATICAL THEORY.",
-	    payhipLink: "https://payhip.com/b/q8WGg"
-      },
-      {
-        id: 5,
-        title: "Conflict and Civility Norms in a Condominium Community",
-        type: "article",
-        format: "pdf",
-        icon: "fa-file-alt",
-        file: "Governance Conflict and Civility Norms in a Condominium Community.pdf",
-        description: "Real-world implementation of Data Vault architecture."
+        payhipLink: "https://payhip.com/b/q8WGg"
       }
-//      {
-//        id: 6,
-//        title: "Handling Slowly Changing Dimensions",
-//        type: "article",
-//        format: "docx",
-//        icon: "fa-file-lines",
-//        file: "handling_scd.docx",
-//        description: "SCD types, hybrid approaches, and performance considerations."
-//      },
-//      {
-//        id: 7,
-//        title: "Modeling for Big Data & NoSQL",
-//        type: "article",
-//        format: "pdf",
-//        icon: "fa-file-pdf",
-//        file: "nosql_data_modeling.pdf",
-//        description: "Polyglot persistence, document modeling, and graph patterns."
-//      }
     ];
 
     // DOM elements
@@ -720,7 +1383,7 @@
         </div>
         <a href="${payhipLink}" class="payhip-buy-button" data-theme="green" data-product="${payhipLink.split('/').pop()}">
           <i class="fas fa-lock"></i>
-          Buy Now
+          Buy on us (direct)
         </a>
       `;
       return container;
