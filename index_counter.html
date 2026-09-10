@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Character Counter</title>
+<style>
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    max-width: 480px;
+    margin: 4rem auto;
+    padding: 0 1.5rem;
+    color: #1a1a1a;
+  }
+  h1 {
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+  }
+  #text-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.6rem 0.8rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+  #count-btn {
+    margin-top: 0.8rem;
+    padding: 0.6rem 1.2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 6px;
+    background: #f6821f;
+    color: white;
+    cursor: pointer;
+  }
+  #count-btn:hover {
+    background: #d9701a;
+  }
+  #result {
+    margin-top: 1.5rem;
+    font-size: 1.1rem;
+  }
+  #result strong {
+    font-size: 1.6rem;
+    color: #f6821f;
+  }
+</style>
+</head>
+<body>
+  <h1>Character Counter (Cloudflare Workers + Python)</h1>
+
+  <input type="text" id="text-input" placeholder="Type something...">
+  <br>
+  <button id="count-btn">Count characters</button>
+
+  <p id="result"></p>
+
+  <script>
+    // This page is hosted at https://robustdatamodeling.com/index.html,
+    // on a different origin than the Cloudflare Worker backend, so the
+    // API must be called with its full URL (not a relative "/count").
+    // Update this if you redeploy the Worker under a different name or
+    // attach a custom domain to it.
+    const API_URL = "https://char-counter.yuritest.workers.dev/count";
+
+    const input = document.getElementById("text-input");
+    const button = document.getElementById("count-btn");
+    const result = document.getElementById("result");
+
+    async function countCharacters() {
+      const text = input.value;
+      button.disabled = true;
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: text })
+        });
+
+        if (!response.ok) {
+          throw new Error("Request failed with status " + response.status);
+        }
+
+        const data = await response.json();
+        result.innerHTML = "Character count: <strong>" + data.count + "</strong>";
+      } catch (err) {
+        result.textContent = "Error: " + err.message;
+      } finally {
+        button.disabled = false;
+      }
+    }
+
+    button.addEventListener("click", countCharacters);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") countCharacters();
+    });
+  </script>
+</body>
+</html>
