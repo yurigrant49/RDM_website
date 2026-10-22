@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Comments | Robust Data Modeling</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="/comment-widget.css">
+  <link rel="stylesheet" href="/comment-widget.css?v=2">
   <style>
     body { margin: 0; padding: 32px 16px 64px; background: #f6f7f9; color: #161b26;
            font-family: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif; }
@@ -28,7 +28,7 @@
     // Address of the Render web service, with no trailing slash.
     window.COMMENTS_API_BASE = 'https://rdm-comments-api.onrender.com';
   </script>
-  <script src="/comment-widget.js"></script>
+  <script src="/comment-widget.js?v=2"></script>
   <script>
     CommentWidget.mount(document.getElementById('comments'), {
       api: CommentWidget.restApi(window.COMMENTS_API_BASE, location.pathname),  // each page keeps its own comments
