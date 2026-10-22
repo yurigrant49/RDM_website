@@ -1,0 +1,82 @@
+/* Comment widget styles. Colors are the tokens at the top; change them to match your site. */
+/* Layout: one reading column; every comment is a two-column row (avatar | body), replies indent by one avatar width. */
+.cw{
+  --cw-bg:#f6f7f9; --cw-surface:#ffffff; --cw-ink:#161b26; --cw-muted:#5d6678; --cw-line:#dde1e8;
+  --cw-hover:#e9ecf2; --cw-accent:#1f4fd8; --cw-accent-ink:#ffffff; --cw-danger:#b3261e; --cw-pin:#eef2fd;
+  --cw-display:"Bricolage Grotesque","Figtree",system-ui,sans-serif;
+  --cw-body:"Figtree",system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+
+
+/* ---------- widget ---------- */
+.cw{background:var(--cw-surface);border:1px solid var(--cw-line);border-radius:14px;padding:20px;display:flex;flex-direction:column;gap:24px}
+.cw button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;border-radius:999px}
+.cw button:focus-visible,.cw textarea:focus-visible,.cw select:focus-visible{outline:2px solid var(--cw-accent);outline-offset:2px}
+.cw-head{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px}
+.cw-count{font-family:var(--cw-display);font-size:20px;font-weight:700;margin:0;font-variant-numeric:tabular-nums}
+.cw-sort{display:flex;align-items:center;gap:6px;font-weight:500;font-size:14px}
+.cw-sort select{font:inherit;font-weight:600;color:var(--cw-ink);background:var(--cw-surface);border:1px solid var(--cw-line);border-radius:8px;padding:5px 8px}
+.cw-reset{margin-left:auto;font-size:13px;color:var(--cw-muted);padding:5px 10px}
+.cw-reset:hover{background:var(--cw-hover);color:var(--cw-ink)}
+
+.cw-row{display:flex;gap:14px;align-items:flex-start}
+.cw-avatar{flex:none;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:600;font-size:15px;user-select:none}
+.cw-avatar.sm{width:28px;height:28px;font-size:12px}
+.cw-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+
+.cw-form{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.cw-form textarea{font:inherit;color:var(--cw-ink);background:transparent;border:0;border-bottom:1px solid var(--cw-line);padding:6px 0;resize:none;overflow:hidden;min-height:34px;width:100%;box-sizing:border-box}
+.cw-form textarea:focus{outline:none;border-bottom:2px solid var(--cw-ink);padding-bottom:5px}
+.cw-form textarea::placeholder{color:var(--cw-muted)}
+.cw-form-actions{display:flex;justify-content:flex-end;gap:8px}
+.cw .cw-btn{padding:8px 16px;font-weight:600;font-size:14px}
+.cw .cw-btn.ghost:hover{background:var(--cw-hover)}
+.cw .cw-btn.primary{background:var(--cw-accent);color:var(--cw-accent-ink)}
+.cw .cw-btn.primary:disabled{background:var(--cw-hover);color:var(--cw-muted);cursor:default}
+
+.cw-counter{font-size:12px;color:var(--cw-muted);margin-right:auto;align-self:center;font-variant-numeric:tabular-nums}
+.cw-counter.over{color:var(--cw-danger);font-weight:600}
+.cw-sug{background:var(--cw-pin);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:8px}
+.cw-sug-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;font-size:14px}
+.cw-sug-head .cw-counter{margin:0}
+.cw-sug-note{margin:0;font-size:13px;color:var(--cw-muted)}
+.cw-form .cw-sug textarea{background:var(--cw-surface);border:1px solid var(--cw-line);border-radius:8px;padding:8px 10px;min-height:60px}
+.cw-form .cw-sug textarea:focus{border:1px solid var(--cw-accent);padding:8px 10px}
+.cw-sug .cw-form-actions{flex-wrap:wrap}
+.cw .cw-btn:disabled{cursor:default;opacity:.55}
+
+.cw-list{display:flex;flex-direction:column;gap:22px}
+.cw-pinned{font-size:12px;color:var(--cw-muted);display:flex;align-items:center;gap:5px}
+.cw-meta{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 8px;font-size:13px}
+.cw-author{font-weight:600}
+.cw-author.owner{background:var(--cw-pin);color:var(--cw-accent);padding:1px 8px;border-radius:999px}
+.cw-time{color:var(--cw-muted);font-size:12px}
+.cw-text{white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.cw-text.clamp{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:4;overflow:hidden}
+.cw .cw-more{align-self:flex-start;color:var(--cw-muted);font-weight:600;font-size:14px;padding:0;border-radius:4px}
+.cw .cw-more:hover{color:var(--cw-ink)}
+.cw-actions{display:flex;flex-wrap:wrap;align-items:center;gap:2px;margin-left:-8px;margin-top:2px}
+.cw .cw-icon{display:inline-flex;align-items:center;gap:6px;padding:7px 8px;font-size:12px;color:var(--cw-muted);font-variant-numeric:tabular-nums}
+.cw .cw-icon:hover{background:var(--cw-hover);color:var(--cw-ink)}
+.cw .cw-icon svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round}
+.cw .cw-icon[aria-pressed="true"]{color:var(--cw-ink)}
+.cw .cw-icon[aria-pressed="true"] svg{fill:currentColor}
+.cw .cw-icon.down svg{transform:rotate(180deg)}
+.cw .cw-text-btn{padding:7px 12px;font-size:12px;font-weight:600}
+.cw .cw-text-btn:hover{background:var(--cw-hover)}
+.cw .cw-text-btn.danger{color:var(--cw-danger)}
+.cw .cw-toggle{align-self:flex-start;display:inline-flex;align-items:center;gap:6px;color:var(--cw-accent);font-weight:600;font-size:14px;padding:7px 12px;margin-left:-12px}
+.cw .cw-toggle:hover{background:var(--cw-pin)}
+.cw-toggle svg{width:12px;height:12px;fill:currentColor;transition:transform .15s}
+.cw-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+.cw-replies{display:flex;flex-direction:column;gap:16px;margin-top:8px}
+.cw-empty{color:var(--cw-muted);text-align:center;padding:24px 0;margin:0}
+@media (max-width:440px){ .cw{padding:16px} .cw-row{gap:10px} .cw-avatar{width:34px;height:34px} }
+@media (prefers-reduced-motion:reduce){ .cw-toggle svg{transition:none} }
+
+.cw{font-family:var(--cw-body);font-size:15px;line-height:1.5;color:var(--cw-ink)}
+.cw [hidden]{display:none!important}
+.cw-name{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--cw-muted)}
+.cw-name input{font:inherit;color:var(--cw-ink);background:var(--cw-surface);border:1px solid var(--cw-line);border-radius:8px;padding:5px 8px;width:11em;max-width:100%}
+.cw-name input:focus-visible{outline:2px solid var(--cw-accent);outline-offset:2px}
+.cw-error{margin:0;color:var(--cw-danger);font-size:13px}

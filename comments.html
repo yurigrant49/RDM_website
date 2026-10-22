@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Comments | Robust Data Modeling</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="/comment-widget.css">
+  <style>
+    body { margin: 0; padding: 32px 16px 64px; background: #f6f7f9; color: #161b26;
+           font-family: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main { max-width: 760px; margin: 0 auto; }
+    h1 { font-family: "Bricolage Grotesque", "Figtree", system-ui, sans-serif; font-size: 30px; margin: 0 0 8px; }
+    .lead { color: #5d6678; margin: 0 0 28px; }
+    a { color: #1f4fd8; }
+  </style>
+</head>
+<body>
+  <main>
+    <p><a href="/">&larr; Robust Data Modeling</a></p>
+    <h1>Comments</h1>
+    <p class="lead">Share your questions and feedback. Comments over 500 characters get a suggested shorter version, and insulting language is not posted.</p>
+
+    <section id="comments" aria-label="Comments"></section>
+  </main>
+
+  <script>
+    // Address of the Render web service, with no trailing slash.
+    window.COMMENTS_API_BASE = 'https://rdm-comments-api.onrender.com';
+  </script>
+  <script src="/comment-widget.js"></script>
+  <script>
+    CommentWidget.mount(document.getElementById('comments'), {
+      api: CommentWidget.restApi(window.COMMENTS_API_BASE, location.pathname),  // each page keeps its own comments
+      limit: 500,
+      summarize: summarizeComment
+    });
+  </script>
+</body>
+</html>
