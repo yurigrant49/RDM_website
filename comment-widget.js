@@ -147,8 +147,9 @@ const CommentWidget = (() => {
         } catch (err) {
           if (ctrl !== mine) return;
           sugTa.hidden = copy.hidden = replace.hidden = sugCount.hidden = true;
-          sugNote.textContent = lead + (rude ? 'The AI rewrite is not available right now. Reword it yourself, then click ' + label + ' again.'
-                                            : 'The AI summary is not available right now. Shorten it yourself, or click ' + label + ' again to post it as written.');
+          const why = (err && err.message) ? ' (' + err.message.replace(/\.$/, '') + ')' : '';
+          sugNote.textContent = lead + (rude ? 'The AI rewrite is not available right now' + why + '. Reword it yourself, then click ' + label + ' again.'
+                                            : 'The AI summary is not available right now' + why + '. Shorten it yourself, or click ' + label + ' again to post it as written.');
         }
       }
       sugTa.addEventListener('input', syncSug);
